@@ -8,4 +8,4 @@ test -f ${PREFIX}/lib/libpyne*
 test -f ${PREFIX}/include/pyne/pyne.h
 # exlcuding ENDF tests because CI no longer seems to be able to download the
 # files.
-nosetests -e="test_endf"
+nosetests test_[a-d]*.py test_endl.py test_enrichment.py test_ensdf*.py test_[f-z]*.py
