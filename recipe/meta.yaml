@@ -13,7 +13,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 0
+  number: 1
   skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
   features:
@@ -34,8 +34,8 @@ requirements:
     - libgfortran
     - python
     - blas 1.1 {{ variant }}
-    - openblas 0.2.18|0.2.18.*
-    - boost 1.61.*
+    - openblas 0.2.19|0.2.19.*
+    - boost 1.62.*
     - hdf5 1.8.17|1.8.17.*
     - bzip2 1.0.*
     - xz 5.2.*
@@ -47,8 +47,8 @@ requirements:
   run:
     - python
     - blas 1.1 {{ variant }}
-    - openblas 0.2.18|0.2.18.*
-    - boost 1.61.*
+    - openblas 0.2.19|0.2.19.*
+    - boost 1.62.*
     - hdf5 1.8.17|1.8.17.*
     - bzip2 1.0.*
     - xz 5.2.*
