@@ -2,10 +2,8 @@
 set -e
 
 if [ "$(uname)" == "Darwin" ]; then
-  libext=".dylib"
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
 else
-  libext=".so"
   skiprpath=""
 fi
 export FC=gfortran
@@ -35,8 +33,8 @@ else
   eggdir="${SP_DIR}"
 fi
 ls "${eggdir}"
-mv "${eggdir}/lib/libpyne${libext}" "${PREFIX}/lib/libpyne${libext}"
-ln -s "${PREFIX}/lib/libpyne${libext}" "${eggdir}/lib/libpyne${libext}"
+mv "${eggdir}/lib/libpyne${SHLIB_EXT}" "${PREFIX}/lib/libpyne${SHLIB_EXT}"
+ln -s "${PREFIX}/lib/libpyne${SHLIB_EXT}" "${eggdir}/lib/libpyne${SHLIB_EXT}"
 mv "${eggdir}/include/pyne" "${PREFIX}/include"
 ln -s "${PREFIX}/include/pyne" "${eggdir}/include"
 
