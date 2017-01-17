@@ -13,15 +13,12 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 0
+  number: 200
+  # note that builds timeout on mac with many versions of python & numpy
   skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
-
-#
-# note that builds timeout on mac with many versions of python & numpy
-#
 
 requirements:
   build:
@@ -34,8 +31,8 @@ requirements:
     - libgfortran
     - python
     - blas 1.1 {{ variant }}
-    - openblas 0.2.18|0.2.18.*
-    - boost 1.61.*
+    - openblas 0.2.19|0.2.19.*
+    - boost 1.63.*
     - hdf5 1.8.17|1.8.17.*
     - bzip2 1.0.*
     - xz 5.2.*
@@ -47,8 +44,8 @@ requirements:
   run:
     - python
     - blas 1.1 {{ variant }}
-    - openblas 0.2.18|0.2.18.*
-    - boost 1.61.*
+    - openblas 0.2.19|0.2.19.*
+    - boost 1.63.*
     - hdf5 1.8.17|1.8.17.*
     - bzip2 1.0.*
     - xz 5.2.*
@@ -66,10 +63,14 @@ test:
     - nose
     - pytables
     - jinja2
+  source_files:
+    - pyne
+    - src
+    - tests
 
 about:
   home: http://pyne.io/
-  license: BSD 3-clause
+  license: BSD 3-Clause
   license_file: license.txt
   summary: "The nuclear engineering toolkit"
 

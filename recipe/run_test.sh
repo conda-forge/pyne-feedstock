@@ -1,6 +1,6 @@
 #!/bin/sh
 # setup env for tests
-cd "${SRC_DIR}/tests"
+cd tests
 export PATH="${PREFIX}/bin:${PATH}"
 
 # run tests
