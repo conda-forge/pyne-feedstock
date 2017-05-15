@@ -1,6 +1,6 @@
-{% set version = "0.5.1" %}
+{% set version = "0.5.2" %}
 {% set org = "pyne" %}
-{% set sha256 = "4028bbe10e6f74d38af2493e2625a77dda2e275a1bf85e2a9b08df56260cdcd8" %}
+{% set sha256 = "ef89da91a78d97a231b1b2ecf5a15aff8127a6863bb574a0d98547a5b9736297" %}
 {% set variant = "openblas" %}
 
 package:
