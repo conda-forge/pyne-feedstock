@@ -39,4 +39,10 @@ mv "${eggdir}/include/pyne" "${PREFIX}/include"
 ln -s "${PREFIX}/include/pyne" "${eggdir}/include"
 
 # Create data library
-scripts/nuc_data_make
+cd build
+if [ "$(uname)" == "Darwin" ]; then
+  export DYLD_FALLBACK_LIBRARY_PATH="${DYLD_FALLBACK_LIBRARY_PATH}:${PREFIX}/lib"
+else
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PREFIX}/lib"
+fi
+${PYTHON} ${PREFIX}/bin/nuc_data_make

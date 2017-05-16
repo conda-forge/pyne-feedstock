@@ -3,13 +3,25 @@ About pyne
 
 Home: http://pyne.io/
 
-Package license: BSD 3-clause
+Package license: BSD 3-Clause
 
 Feedstock license: BSD 3-Clause
 
 Summary: The nuclear engineering toolkit
 
 
+
+Current build status
+====================
+
+Linux: [![Circle CI](https://circleci.com/gh/conda-forge/pyne-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/pyne-feedstock)
+OSX: [![TravisCI](https://travis-ci.org/conda-forge/pyne-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/pyne-feedstock)
+Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
+
+Current release info
+====================
+Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyne/badges/version.svg)](https://anaconda.org/conda-forge/pyne)
+Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyne/badges/downloads.svg)](https://anaconda.org/conda-forge/pyne)
 
 Installing pyne
 ===============
@@ -31,7 +43,6 @@ It is possible to list all of the versions of `pyne` available on your platform 
 ```
 conda search pyne --channel conda-forge
 ```
-
 
 
 About conda-forge
@@ -67,18 +78,6 @@ Terminology
 
 **conda-forge** - the place where the feedstock and smithy live and work to
                   produce the finished article (built conda distributions)
-
-Current build status
-====================
-
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/pyne-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/pyne-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/pyne-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/pyne-feedstock)
-Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
-
-Current release info
-====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyne/badges/version.svg)](https://anaconda.org/conda-forge/pyne)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyne/badges/downloads.svg)](https://anaconda.org/conda-forge/pyne)
 
 
 Updating pyne-feedstock

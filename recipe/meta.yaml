@@ -1,6 +1,6 @@
-{% set version = "0.5.1" %}
+{% set version = "0.5.3" %}
 {% set org = "pyne" %}
-{% set sha256 = "4028bbe10e6f74d38af2493e2625a77dda2e275a1bf85e2a9b08df56260cdcd8" %}
+{% set sha256 = "dbbfe331f92b361099d078b6825a69871ae1c3cdf850410afc9171ca607af35a" %}
 {% set variant = "openblas" %}
 
 package:
@@ -32,26 +32,26 @@ requirements:
     - python
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost 1.63.*
+    - boost-cpp 1.64.*
     - hdf5 1.8.17|1.8.17.*
     - bzip2 1.0.*
     - xz 5.2.*
     - moab
     - cython
     - numpy x.x  # [linux]
-    - numpy 1.11.*  # [osx]
+    - numpy 1.12.*  # [osx]
     - pytables
   run:
     - python
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
-    - boost 1.63.*
+    - boost-cpp 1.64.*
     - hdf5 1.8.17|1.8.17.*
     - bzip2 1.0.*
     - xz 5.2.*
     - moab
     - numpy x.x  # [linux]
-    - numpy 1.11.*  # [osx]
+    - numpy 1.12.*  # [osx]
     - scipy
     - pytables
     - libgcc
