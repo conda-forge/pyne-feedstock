@@ -13,7 +13,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 200
+  number: 201
   # note that builds timeout on mac with many versions of python & numpy
   skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
@@ -33,7 +33,7 @@ requirements:
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
     - boost-cpp 1.64.*
-    - hdf5 1.8.17|1.8.17.*
+    - hdf5 1.8.18|1.8.18.*
     - bzip2 1.0.*
     - xz 5.2.*
     - moab
@@ -46,7 +46,7 @@ requirements:
     - blas 1.1 {{ variant }}
     - openblas 0.2.19|0.2.19.*
     - boost-cpp 1.64.*
-    - hdf5 1.8.17|1.8.17.*
+    - hdf5 1.8.18|1.8.18.*
     - bzip2 1.0.*
     - xz 5.2.*
     - moab
