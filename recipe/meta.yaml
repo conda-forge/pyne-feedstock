@@ -31,27 +31,27 @@ requirements:
     - libgfortran
     - python
     - blas 1.1 {{ variant }}
-    - openblas 0.2.19|0.2.19.*
-    - boost-cpp 1.64.*
-    - hdf5 1.8.18|1.8.18.*
+    - openblas 0.2.20|0.2.20.*
+    - boost-cpp 1.65.1
+    - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
     - moab
     - cython
-    - numpy x.x  # [linux]
-    - numpy 1.12.*  # [osx]
     - pytables
+    - numpy 1.11.*  # [linux]
+    - numpy 1.12.*  # [osx]
   run:
     - python
     - blas 1.1 {{ variant }}
-    - openblas 0.2.19|0.2.19.*
-    - boost-cpp 1.64.*
-    - hdf5 1.8.18|1.8.18.*
+    - openblas 0.2.20|0.2.20.*
+    - boost-cpp 1.65.1
+    - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
     - moab
-    - numpy x.x  # [linux]
-    - numpy 1.12.*  # [osx]
+    - numpy >=1.11  # [linux]
+    - numpy >=1.12  # [osx]
     - scipy
     - pytables
     - libgcc
