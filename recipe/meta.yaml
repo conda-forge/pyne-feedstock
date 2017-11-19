@@ -22,7 +22,7 @@ build:
 
 requirements:
   build:
-    - toolchain
+    - toolchain3
     - cmake
     - pkg-config
     - setuptools
