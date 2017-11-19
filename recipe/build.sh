@@ -3,6 +3,7 @@ set -e
 
 if [ "$(uname)" == "Darwin" ]; then
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
+  export CPU_COUNT=1
 else
   skiprpath=""
 fi
