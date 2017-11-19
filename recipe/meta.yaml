@@ -36,7 +36,7 @@ requirements:
     - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
-    - moab
+    - moab  # [linux]
     - cython
     - pytables
     - numpy 1.11.*  # [linux]
@@ -49,7 +49,7 @@ requirements:
     - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
-    - moab
+    - moab  # [linux]
     - numpy >=1.11  # [linux]
     - numpy >=1.12  # [osx]
     - scipy
