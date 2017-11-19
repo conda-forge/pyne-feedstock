@@ -4,9 +4,10 @@ set -e
 if [ "$(uname)" == "Darwin" ]; then
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
   export CPU_COUNT=1
-  export CXX_FLAGS="${CXX_FLAGS} -v"
+  cflags="${CMAKE_C_FLAGS} -v -Wpedantic -Wall -Wextra"
 else
   skiprpath=""
+  cflags="${CMAKE_C_FLAGS}"
 fi
 export FC=gfortran
 
@@ -19,6 +20,7 @@ ${PYTHON} setup.py install \
   --moab="${PREFIX}" \
   -DMOAB_INCLUDE_DIR="${PREFIX}/include" \
   -DCMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_VERSION_MIN}" \
+  -DCMAKE_C_FLAGS="${cflags}" \
   ${skiprpath} \
   --clean \
   -j "${CPU_COUNT}"
