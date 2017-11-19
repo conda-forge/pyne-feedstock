@@ -4,6 +4,7 @@ set -e
 if [ "$(uname)" == "Darwin" ]; then
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
   export CPU_COUNT=1
+  export CXX_FLAGS="${CXX_FLAGS} -v"
 else
   skiprpath=""
 fi
