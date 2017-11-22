@@ -4,14 +4,12 @@ set -e
 if [ "$(uname)" == "Darwin" ]; then
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
   export CPU_COUNT=1
-  cflags="${CMAKE_C_FLAGS} -v -Wpedantic -Wall -Wextra"
 else
   skiprpath=""
-  cflags="${CMAKE_C_FLAGS}"
 fi
 export FC=gfortran
 
-# Install PyNE
+# Install PyNE (in the background)
 export VERBOSE=1
 ${PYTHON} setup.py install \
   --build-type="Release" \
@@ -23,7 +21,14 @@ ${PYTHON} setup.py install \
   -DCMAKE_C_FLAGS="${cflags}" \
   ${skiprpath} \
   --clean \
-  -j "${CPU_COUNT}"
+  -j "${CPU_COUNT}" &
+
+# This is needed to prevent Travis CI from interruping long compile times
+LAST_PID=$!
+while kill -0 $LAST_PID; do
+  echo "Still installing PyNE..."
+  sleep 60
+done
 
 # Create data library
 cd build
