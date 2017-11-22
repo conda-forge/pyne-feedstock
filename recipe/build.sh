@@ -3,12 +3,13 @@ set -e
 
 if [ "$(uname)" == "Darwin" ]; then
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
+  export CPU_COUNT=1
 else
   skiprpath=""
 fi
 export FC=gfortran
 
-# Install PyNE
+# Install PyNE (in the background)
 export VERBOSE=1
 ${PYTHON} setup.py install \
   --build-type="Release" \
@@ -17,26 +18,17 @@ ${PYTHON} setup.py install \
   --moab="${PREFIX}" \
   -DMOAB_INCLUDE_DIR="${PREFIX}/include" \
   -DCMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_VERSION_MIN}" \
+  -DCMAKE_C_FLAGS="${cflags}" \
   ${skiprpath} \
   --clean \
-  -j "${CPU_COUNT}"
+  -j "${CPU_COUNT}" &
 
-# PyNE's build system is wack
-# mv the shared object to the standard location and then softlink it back
-# likewise for the headers
-# Create data library
-eggname=$(ls build/dist)
-egglib=$(ls -d "${SP_DIR}/${eggname}/lib")
-if [ -d "${egglib}" ]; then
-  eggdir=$(dirname "${egglib}")
-else
-  eggdir="${SP_DIR}"
-fi
-ls "${eggdir}"
-mv "${eggdir}/lib/libpyne${SHLIB_EXT}" "${PREFIX}/lib/libpyne${SHLIB_EXT}"
-ln -s "${PREFIX}/lib/libpyne${SHLIB_EXT}" "${eggdir}/lib/libpyne${SHLIB_EXT}"
-mv "${eggdir}/include/pyne" "${PREFIX}/include"
-ln -s "${PREFIX}/include/pyne" "${eggdir}/include"
+# This is needed to prevent Travis CI from interruping long compile times
+LAST_PID=$!
+while kill -0 $LAST_PID; do
+  echo "Still installing PyNE..."
+  sleep 60
+done
 
 # Create data library
 cd build
