@@ -1,6 +1,6 @@
-{% set version = "0.5.3" %}
+{% set version = "0.5.7" %}
 {% set org = "pyne" %}
-{% set sha256 = "dbbfe331f92b361099d078b6825a69871ae1c3cdf850410afc9171ca607af35a" %}
+{% set sha256 = "a47b87a39cae98e1d727ff6ea4d3027a479e3655e84c2b2cbf889bf57217f600" %}
 {% set variant = "openblas" %}
 
 package:
@@ -13,7 +13,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 201
+  number: 0
   # note that builds timeout on mac with many versions of python & numpy
   skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
