@@ -3,6 +3,8 @@ set -e
 
 if [ "$(uname)" == "Darwin" ]; then
   skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
+  export CC="${PREFIX}/bin/gcc"
+  export CXX="${PREFIX}/bin/gcc"
 else
   skiprpath=""
 fi
