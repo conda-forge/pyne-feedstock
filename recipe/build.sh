@@ -21,23 +21,6 @@ ${PYTHON} setup.py install \
   --clean \
   -j "${CPU_COUNT}"
 
-# PyNE's build system is wack
-# mv the shared object to the standard location and then softlink it back
-# likewise for the headers
-# Create data library
-eggname=$(ls build/dist)
-egglib=$(ls -d "${SP_DIR}/${eggname}/lib")
-if [ -d "${egglib}" ]; then
-  eggdir=$(dirname "${egglib}")
-else
-  eggdir="${SP_DIR}"
-fi
-ls "${eggdir}"
-mv "${eggdir}/lib/libpyne${SHLIB_EXT}" "${PREFIX}/lib/libpyne${SHLIB_EXT}"
-ln -s "${PREFIX}/lib/libpyne${SHLIB_EXT}" "${eggdir}/lib/libpyne${SHLIB_EXT}"
-mv "${eggdir}/include/pyne" "${PREFIX}/include"
-ln -s "${PREFIX}/include/pyne" "${eggdir}/include"
-
 # Create data library
 cd build
 if [ "$(uname)" == "Darwin" ]; then
