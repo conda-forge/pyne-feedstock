@@ -15,7 +15,7 @@ source:
 build:
   number: 0
   # note that builds timeout on mac with many versions of python & numpy
-  skip: True  # [win32 or (win and not py35) or (osx and py34)]
+  skip: True  # [win32 or (win and py34) or (win and py27) or (osx and py34)]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
@@ -24,7 +24,7 @@ requirements:
   build:
     - toolchain3
     - cmake
-    - pkg-config
+    - pkg-config  # [not win]
     - setuptools
     - gcc  # [not win]
     - flang  # [win]
