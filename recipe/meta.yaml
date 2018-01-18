@@ -28,6 +28,7 @@ requirements:
     - setuptools
     - gcc  # [not win]
     - flang  # [win]
+    - jom  # [win]
     - libgcc  # [not win]
     - libgfortran  # [not win]
     - python
