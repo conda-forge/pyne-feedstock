@@ -15,7 +15,7 @@ source:
 build:
   number: 0
   # note that builds timeout on mac with many versions of python & numpy
-  skip: True  # [win or (osx and py34)]
+  skip: True  # [win32 or (win and not py35) or (osx and py34)]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
@@ -26,9 +26,10 @@ requirements:
     - cmake
     - pkg-config
     - setuptools
-    - gcc
-    - libgcc
-    - libgfortran
+    - gcc  # [not win]
+    - flang  # [win]
+    - libgcc  # [not win]
+    - libgfortran  # [not win]
     - python
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
