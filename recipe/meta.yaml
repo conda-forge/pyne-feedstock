@@ -19,6 +19,9 @@ build:
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
+    - vc 14  # [win]
+  patches:
+    - install_targets.patch  # [win]
 
 requirements:
   build:
