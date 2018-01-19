@@ -1,8 +1,8 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 8faf9a82..4bf19606 100644
+index 8faf9a82..73f246b5 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -60,6 +60,19 @@ set(MOAB_SRCS
+@@ -60,6 +60,25 @@ set(MOAB_SRCS
      "source_sampling.cpp"
      )
  
@@ -18,6 +18,12 @@ index 8faf9a82..4bf19606 100644
 +    COMMAND "${PYTHON_EXECUTABLE}" "-c" "import decaygen; decaygen.build()"
 +    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
 +    BYPRODUCTS "decay.h"
++)
++
++add_custom_command(
++    OUTPUT "cram.c"
++    COMMAND "${PYTHON_EXECUTABLE}" "-c" "from transmutagen import gensolve; gensolve.generate(py_solve=True, namespace='pyne_cram', outfile='cram.c')"
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
 +)
  
  #check operating system
