@@ -11,24 +11,33 @@ source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
   url: https://github.com/{{ org }}/pyne/archive/{{ version }}.tar.gz
   sha256: {{ sha256 }}
+  patches:
+    - install_targets.patch  # [win]
+    - threads.patch  # [win]
+    - atomic_data.patch  # [win]
+    - disable_fpic.patch  # [win]
+    - ruler.patch  # [win]
 
 build:
   number: 0
   # note that builds timeout on mac with many versions of python & numpy
-  skip: True  # [win or (osx and py34)]
+  skip: True  # [win32 or (win and py34) or (win and py27) or (osx and py34)]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
+    - vc 14  # [win]
 
 requirements:
   build:
     - toolchain3
     - cmake
-    - pkg-config
+    - pkg-config  # [not win]
     - setuptools
-    - gcc
-    - libgcc
-    - libgfortran
+    - gcc  # [not win]
+    - flang  # [win]
+    - jom  # [win]
+    - libgcc  # [not win]
+    - libgfortran  # [not win]
     - python
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
