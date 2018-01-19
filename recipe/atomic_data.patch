@@ -1,0 +1,16 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 8faf9a82..52da82ed 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -60,6 +60,11 @@ set(MOAB_SRCS
+     "source_sampling.cpp"
+     )
+ 
++add_custom_command(
++    OUTPUT "atomic_data.cpp"
++    COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_BUILD_DIR}/atomicgen.py"
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
++)
+ 
+ #check operating system
+ IF(NOT ${PYNE_PLATFORM} STREQUAL "__LINUX__")
