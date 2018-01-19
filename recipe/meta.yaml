@@ -11,6 +11,8 @@ source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
   url: https://github.com/{{ org }}/pyne/archive/{{ version }}.tar.gz
   sha256: {{ sha256 }}
+  patches:
+    - install_targets.patch  # [win]
 
 build:
   number: 0
@@ -20,8 +22,6 @@ build:
   features:
     - blas_{{ variant }}
     - vc 14  # [win]
-  patches:
-    - install_targets.patch  # [win]
 
 requirements:
   build:
