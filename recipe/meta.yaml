@@ -15,6 +15,7 @@ source:
     - install_targets.patch  # [win]
     - threads.patch  # [win]
     - atomic_data.patch  # [win]
+    - disable_fpic.patch  # [win]
 
 build:
   number: 0
