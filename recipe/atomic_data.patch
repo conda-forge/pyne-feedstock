@@ -9,21 +9,21 @@ index 8faf9a82..73f246b5 100644
 +add_custom_command(
 +    OUTPUT "atomic_data.cpp"
 +    COMMAND "${PYTHON_EXECUTABLE}" "atomicgen.py"
-+    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 +    BYPRODUCTS "atomic_data.h"
 +)
 +
 +add_custom_command(
 +    OUTPUT "decay.cpp"
 +    COMMAND "${PYTHON_EXECUTABLE}" "-c" "import decaygen; decaygen.build()"
-+    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 +    BYPRODUCTS "decay.h"
 +)
 +
 +add_custom_command(
 +    OUTPUT "cram.c"
 +    COMMAND "${PYTHON_EXECUTABLE}" "-c" "from transmutagen import gensolve; gensolve.generate(py_solve=True, namespace='pyne_cram', outfile='cram.c')"
-+    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 +)
  
  #check operating system
