@@ -16,6 +16,7 @@ source:
     - threads.patch  # [win]
     - atomic_data.patch  # [win]
     - disable_fpic.patch  # [win]
+    - ruler.patch  # [win]
 
 build:
   number: 0
