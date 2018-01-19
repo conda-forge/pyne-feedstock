@@ -1,15 +1,23 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 8faf9a82..52da82ed 100644
+index 8faf9a82..4bf19606 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -60,6 +60,11 @@ set(MOAB_SRCS
+@@ -60,6 +60,19 @@ set(MOAB_SRCS
      "source_sampling.cpp"
      )
  
 +add_custom_command(
 +    OUTPUT "atomic_data.cpp"
-+    COMMAND "${PYTHON_EXECUTABLE}" "${CMAKE_CURRENT_BUILD_DIR}/atomicgen.py"
++    COMMAND "${PYTHON_EXECUTABLE}" "atomicgen.py"
 +    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
++    BYPRODUCTS "atomic_data.h"
++)
++
++add_custom_command(
++    OUTPUT "decay.cpp"
++    COMMAND "${PYTHON_EXECUTABLE}" "-c" "import decaygen; decaygen.build()"
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BUILD_DIR}
++    BYPRODUCTS "decay.h"
 +)
  
  #check operating system
