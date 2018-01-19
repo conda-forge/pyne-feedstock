@@ -13,6 +13,7 @@ source:
   sha256: {{ sha256 }}
   patches:
     - install_targets.patch  # [win]
+    - threads.patch  # [win]
 
 build:
   number: 0
