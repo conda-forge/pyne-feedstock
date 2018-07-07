@@ -14,14 +14,16 @@ Summary: The nuclear engineering toolkit
 Current build status
 ====================
 
-Linux: [![Circle CI](https://circleci.com/gh/conda-forge/pyne-feedstock.svg?style=shield)](https://circleci.com/gh/conda-forge/pyne-feedstock)
-OSX: [![TravisCI](https://travis-ci.org/conda-forge/pyne-feedstock.svg?branch=master)](https://travis-ci.org/conda-forge/pyne-feedstock)
-Windows: ![](https://cdn.rawgit.com/conda-forge/conda-smithy/90845bba35bec53edac7a16638aa4d77217a3713/conda_smithy/static/disabled.svg)
+[![Linux](https://img.shields.io/circleci/project/github/conda-forge/pyne-feedstock/master.svg?label=Linux)](https://circleci.com/gh/conda-forge/pyne-feedstock)
+[![OSX](https://img.shields.io/travis/conda-forge/pyne-feedstock/master.svg?label=macOS)](https://travis-ci.org/conda-forge/pyne-feedstock)
+![Windows disabled](https://img.shields.io/badge/Windows-disabled-lightgrey.svg)
 
 Current release info
 ====================
-Version: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyne/badges/version.svg)](https://anaconda.org/conda-forge/pyne)
-Downloads: [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pyne/badges/downloads.svg)](https://anaconda.org/conda-forge/pyne)
+
+| Name | Downloads | Version | Platforms |
+| --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-pyne-green.svg)](https://anaconda.org/conda-forge/pyne) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pyne.svg)](https://anaconda.org/conda-forge/pyne) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pyne.svg)](https://anaconda.org/conda-forge/pyne) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pyne.svg)](https://anaconda.org/conda-forge/pyne) |
 
 Installing pyne
 ===============
