@@ -6,12 +6,18 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      linux_python2.7:
-        CONFIG: linux_python2.7
-      linux_python3.6:
-        CONFIG: linux_python3.6
-      linux_python3.7:
-        CONFIG: linux_python3.7
+      linux_c_compilergcccxx_compilergxxfortran_compilergfortranpython2.7:
+        CONFIG: linux_c_compilergcccxx_compilergxxfortran_compilergfortranpython2.7
+      linux_c_compilergcccxx_compilergxxfortran_compilergfortranpython3.6:
+        CONFIG: linux_c_compilergcccxx_compilergxxfortran_compilergfortranpython3.6
+      linux_c_compilergcccxx_compilergxxfortran_compilergfortranpython3.7:
+        CONFIG: linux_c_compilergcccxx_compilergxxfortran_compilergfortranpython3.7
+      linux_c_compilertoolchain_ccxx_compilertoolchain_cxxfortran_compilertoolchain_fortpython2.7:
+        CONFIG: linux_c_compilertoolchain_ccxx_compilertoolchain_cxxfortran_compilertoolchain_fortpython2.7
+      linux_c_compilertoolchain_ccxx_compilertoolchain_cxxfortran_compilertoolchain_fortpython3.6:
+        CONFIG: linux_c_compilertoolchain_ccxx_compilertoolchain_cxxfortran_compilertoolchain_fortpython3.6
+      linux_c_compilertoolchain_ccxx_compilertoolchain_cxxfortran_compilertoolchain_fortpython3.7:
+        CONFIG: linux_c_compilertoolchain_ccxx_compilertoolchain_cxxfortran_compilertoolchain_fortpython3.7
   steps:
   - script: |
       sudo pip install --upgrade pip
