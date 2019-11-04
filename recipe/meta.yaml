@@ -45,7 +45,7 @@ requirements:
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
     - boost-cpp 1.66.0
-    - hdf5 1.10.1
+    - hdf5
     - bzip2 1.0.*
     - xz 5.2.*
     - moab 4.*  # [linux]
