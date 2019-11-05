@@ -13,7 +13,7 @@ source:
   sha256: {{ sha256 }}
 
 build:
-  number: 0
+  number: 1
   # note that builds timeout on mac with many versions of python & numpy
   skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
