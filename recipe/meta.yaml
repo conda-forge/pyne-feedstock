@@ -63,6 +63,7 @@ requirements:
     - cython
     - numpy 1.11.*
     - pytables
+    - jinja2
     - moab # [moab == 'moab']
     - dagmc # [dagmc == 'dagmc' and moab == 'moab' ]
   run:
@@ -78,6 +79,7 @@ requirements:
     - numpy >=1.11.*
     - scipy
     - pytables
+    - jinja2
     - moab # [moab == 'moab']
     - dagmc # [dagmc == 'dagmc' and moab == 'moab' ]
 
