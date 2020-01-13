@@ -10,13 +10,13 @@
 {% set dagmc = dagmc or 'nodagmc' %}
 
 
-{% if moab != 'nomoab' %}
-{% set prefix = "moab_" + mpi %}
+{% if moab != "nomoab" %}
+{% set prefix = "moab_" + moab %}
 {% else %}
 {% set prefix = "nomoab" %}
 {% endif %}
 
-{% if moab != 'nodagmc' %}
+{% if dagmc != "nodagmc" %}
 {% set prefix = "dagmc_" + dagmc %}
 {% else %}
 {% set prefix = "nodagmc" %}
@@ -37,7 +37,7 @@ build:
   number: {{ build }}
   string: "{{ prefix }}}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
   # note that builds timeout on mac with many versions of python & numpy
-  skip: True  # [win or (osx and py34) or ((moab == 'nomoab) and (dagmc == 'dagmc'))]
+  skip: True  # [win or (osx and py34) or ((moab == 'nomoab') and (dagmc == 'dagmc'))]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
