@@ -56,12 +56,11 @@ requirements:
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
     - lapack
-    - boost-cpp 1.66.0
     - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
     - cython
-    - numpy 1.11.*
+    - numpy >= 1.11.*
     - pytables
     - jinja2
     - moab # [moab == "moab"]
@@ -72,7 +71,6 @@ requirements:
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
     - lapack
-    - boost-cpp 1.66.0
     - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
