@@ -49,13 +49,13 @@ requirements:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - {{ compiler('fortran') }}
-
   host:
     - python
+    - future
     - setuptools
-    - toolchain3
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
+    - lapack
     - boost-cpp 1.66.0
     - hdf5 1.10.1
     - bzip2 1.0.*
@@ -67,8 +67,10 @@ requirements:
     - dagmc # [dagmc == 'dagmc' and moab == 'moab' ]
   run:
     - python
+    - future
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
+    - lapack
     - boost-cpp 1.66.0
     - hdf5 1.10.1
     - bzip2 1.0.*
@@ -84,7 +86,6 @@ test:
     - setuptools
     - nose
     - pytables
-    - jinja2
     - moab # [moab == 'moab']
     - dagmc # [dagmc == 'dagmc' and moab == 'moab' ]
   source_files:
