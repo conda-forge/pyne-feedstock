@@ -27,7 +27,7 @@ build:
   {% if moab != 'nomoab' %}
   run_exports:
     - {{ name }} * {{ moab_prefix }}_*
-      {% endif %}
+  {% endif %}
 
   skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
