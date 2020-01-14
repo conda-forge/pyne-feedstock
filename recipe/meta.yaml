@@ -4,7 +4,7 @@
 {% set sha256 = "19e104a05aa56ef2e747f5e4a1c4cffefdb57a592a300823265ba72a1b55d4f3" %}
 
 # ensure moab is defined (needed for conda-smithy recipe-lint)
-{% set enable_moab = moab or 'nomoab' %}
+{% set enable_moab = enable_moab or 'nomoab' %}
 
 package:
   name: pyne
@@ -45,7 +45,7 @@ requirements:
     - numpy
     - pytables
     - cython
-    - moab  # [enable_moab == 'moab']
+    - moab  # [ enable_moab = 'moab' ]
   run:
     - python
     - hdf5
@@ -54,7 +54,7 @@ requirements:
     - scipy
     - future
     - jinja2
-    - moab  # [enable_moab == 'moab']
+    - moab  # [ enable_moab = 'moab' ]
 test:
   requires:
     - nose
