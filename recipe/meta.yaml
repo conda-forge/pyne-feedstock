@@ -9,7 +9,7 @@ package:
 
 source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ org }}/pyne/archive/{{ version }}i-rc1.tar.gz
+  url: https://github.com/{{ org }}/pyne/archive/{{ version }}-rc1.tar.gz
   sha256: {{ sha256 }}
 
 build:
