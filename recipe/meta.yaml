@@ -1,8 +1,8 @@
 {% set org = "pyne" %}
-{% set version = "0.5.11" %}
+{% set version = "0.7.0" %}
 {% set build = "0" %}
-{% set sha256 = "ba05917b0de446ec520857655e77967a783e3bc723299faf5989f532d6b0647a" %}
-{% set variant = "openblas" %}
+{% set sha256 = "19e104a05aa56ef2e747f5e4a1c4cffefdb57a592a300823265ba72a1b55d4f3" %}
+#{% set variant = "openblas" %}
 
 package:
   name: pyne
@@ -10,15 +10,16 @@ package:
 
 source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ org }}/pyne/archive/{{ version }}.tar.gz
+  url: https://github.com/pyne/pyne/archive/0.7.0-rc1.tar.gz
+  #  url: https://github.com/{{ org }}/pyne/archive/{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
 build:
   number: {{ build }}
   skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
-  features:
-    - blas_{{ variant }}
+  #features:
+  # - blas_{{ variant }}
 
 requirements:
   build:
@@ -29,37 +30,21 @@ requirements:
     - {{ compiler("fortran") }}
   host:
     - python
-    - future
     - setuptools
-    - blas 1.1 {{ variant }}
-    - openblas 0.2.20|0.2.20.*
-    - lapack
-    - hdf5 1.10.1
-    - bzip2 1.0.*
-    - xz 5.2.*
-    - cython
+    - hdf5 <1.10.5
     - numpy
     - pytables
-    - jinja2
+    - cython
   run:
     - python
-    - future
-    - blas 1.1 {{ variant }}
-    - openblas 0.2.20|0.2.20.*
-    - lapack
-    - hdf5 1.10.1
-    - bzip2 1.0.*
-    - xz 5.2.*
-    - numpy
-    - scipy
+    - hdf5 <1.10.5
     - pytables
+    - scipy
+    - future
     - jinja2
-
 test:
   requires:
-    - setuptools
     - nose
-    - pytables
   source_files:
     - pyne
     - src

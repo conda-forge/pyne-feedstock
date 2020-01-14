@@ -6,7 +6,7 @@ if [ "$(uname)" == "Darwin" ]; then
 else
   skiprpath=""
 fi
-export FC=gfortran
+#export FC=gfortran
 
 # Install PyNE
 export VERBOSE=1
