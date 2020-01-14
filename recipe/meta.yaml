@@ -17,14 +17,14 @@ source:
 
 build:
   number: {{ build }}
-  {% if moab != "nomoab" %}
-  {% set moab_prefix = "moab_" + moab %}
+  {% if moab == "moab" %}
+  {% set moab_prefix = moab %}
   {% else %}
   {% set moab_prefix = "nomoab" %}
   {% endif %}
   string: "{{ moab_prefix }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
 
-  {% if moab != "nomoab" %}
+  {% if moab == "moab" %}
   run_exports:
     - {{ name }} * {{ moab_prefix }}_*
   {% endif %}
@@ -45,7 +45,7 @@ requirements:
     - numpy
     - pytables
     - cython
-    - moab  # [moab == 'moab']
+      #- moab  # [moab == 'moab']
   run:
     - python
     - hdf5
@@ -54,7 +54,7 @@ requirements:
     - scipy
     - future
     - jinja2
-    - moab  # [moab == 'moab']
+      #- moab  # [moab == 'moab']
 test:
   requires:
     - nose
