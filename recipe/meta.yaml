@@ -26,7 +26,6 @@ requirements:
     - {{ compiler("fortran") }}
   host:
     - python
-    #- hdf5 <1.10.5 [ py >= 3.7]
     - hdf5 
     - numpy
     - pytables
