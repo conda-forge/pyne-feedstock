@@ -5,9 +5,9 @@
 {% set variant = "openblas" %}
 
 # ensure moab is defined (needed for conda-smithy recipe-lint)
-{% set moab = moab or 'nomoab' %}
+{% set moab = moab or "nomoab" %}
 # ensure dagmc is defined (needed for conda-smithy recipe-lint)
-{% set dagmc = dagmc or 'nodagmc' %}
+{% set dagmc = dagmc or "nodagmc" %}
 
 
 {% if moab != "nomoab" %}
@@ -37,7 +37,7 @@ build:
   number: {{ build }}
   string: "{{ prefix }}}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
   # note that builds timeout on mac with many versions of python & numpy
-  skip: True  # [win or (osx and py34) or ((moab == 'nomoab') and (dagmc == 'dagmc'))]
+  skip: True  # [win or (osx and py34) or ((moab == "nomoab") and (dagmc == "dagmc"))]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
@@ -46,47 +46,48 @@ requirements:
   build:
     - cmake
     - pkg-config
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
-    - {{ compiler('fortran') }}
-
+    - {{ compiler("c") }}
+    - {{ compiler("cxx") }}
+    - {{ compiler("fortran") }}
   host:
     - python
+    - future
     - setuptools
-    - toolchain3
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
-    - boost-cpp 1.66.0
+    - lapack
     - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
     - cython
-    - numpy 1.11.*
+    - numpy >= 1.11.*
     - pytables
-    - moab # [moab == 'moab']
-    - dagmc # [dagmc == 'dagmc' and moab == 'moab' ]
+    - jinja2
+    - moab # [moab == "moab"]
+    - dagmc # [dagmc == "dagmc" and moab == "moab" ]
   run:
     - python
+    - future
     - blas 1.1 {{ variant }}
     - openblas 0.2.20|0.2.20.*
-    - boost-cpp 1.66.0
+    - lapack
     - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
     - numpy >=1.11.*
     - scipy
     - pytables
-    - moab # [moab == 'moab']
-    - dagmc # [dagmc == 'dagmc' and moab == 'moab' ]
+    - jinja2
+    - moab # [moab == "moab"]
+    - dagmc # [dagmc == "dagmc" and moab == "moab" ]
 
 test:
   requires:
     - setuptools
     - nose
     - pytables
-    - jinja2
-    - moab # [moab == 'moab']
-    - dagmc # [dagmc == 'dagmc' and moab == 'moab' ]
+    - moab # [moab == "moab"]
+    - dagmc # [dagmc == "dagmc" and moab == "moab" ]
   source_files:
     - pyne
     - src
