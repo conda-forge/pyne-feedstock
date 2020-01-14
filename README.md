@@ -29,87 +29,87 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_moabmoabpython2.7</td>
+              <td>linux_enable_moabmoabpython2.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_moabmoabpython2.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_enable_moabmoabpython2.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_moabmoabpython3.6</td>
+              <td>linux_enable_moabmoabpython3.6</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_moabmoabpython3.6" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_enable_moabmoabpython3.6" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_moabmoabpython3.7</td>
+              <td>linux_enable_moabmoabpython3.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_moabmoabpython3.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_enable_moabmoabpython3.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_moabnomoabpython2.7</td>
+              <td>linux_enable_moabnomoabpython2.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_moabnomoabpython2.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_enable_moabnomoabpython2.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_moabnomoabpython3.6</td>
+              <td>linux_enable_moabnomoabpython3.6</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_moabnomoabpython3.6" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_enable_moabnomoabpython3.6" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_moabnomoabpython3.7</td>
+              <td>linux_enable_moabnomoabpython3.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_moabnomoabpython3.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_enable_moabnomoabpython3.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_moabmoabpython2.7</td>
+              <td>osx_enable_moabmoabpython2.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_moabmoabpython2.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_enable_moabmoabpython2.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_moabmoabpython3.6</td>
+              <td>osx_enable_moabmoabpython3.6</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_moabmoabpython3.6" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_enable_moabmoabpython3.6" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_moabmoabpython3.7</td>
+              <td>osx_enable_moabmoabpython3.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_moabmoabpython3.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_enable_moabmoabpython3.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_moabnomoabpython2.7</td>
+              <td>osx_enable_moabnomoabpython2.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_moabnomoabpython2.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_enable_moabnomoabpython2.7" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_moabnomoabpython3.6</td>
+              <td>osx_enable_moabnomoabpython3.6</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_moabnomoabpython3.6" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_enable_moabnomoabpython3.6" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>osx_moabnomoabpython3.7</td>
+              <td>osx_enable_moabnomoabpython3.7</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_moabnomoabpython3.7" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=osx&configuration=osx_enable_moabnomoabpython3.7" alt="variant">
                 </a>
               </td>
             </tr>

@@ -10,23 +10,23 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      osx_moabmoabpython2.7:
-        CONFIG: osx_moabmoabpython2.7
+      osx_enable_moabmoabpython2.7:
+        CONFIG: osx_enable_moabmoabpython2.7
         UPLOAD_PACKAGES: True
-      osx_moabmoabpython3.6:
-        CONFIG: osx_moabmoabpython3.6
+      osx_enable_moabmoabpython3.6:
+        CONFIG: osx_enable_moabmoabpython3.6
         UPLOAD_PACKAGES: True
-      osx_moabmoabpython3.7:
-        CONFIG: osx_moabmoabpython3.7
+      osx_enable_moabmoabpython3.7:
+        CONFIG: osx_enable_moabmoabpython3.7
         UPLOAD_PACKAGES: True
-      osx_moabnomoabpython2.7:
-        CONFIG: osx_moabnomoabpython2.7
+      osx_enable_moabnomoabpython2.7:
+        CONFIG: osx_enable_moabnomoabpython2.7
         UPLOAD_PACKAGES: True
-      osx_moabnomoabpython3.6:
-        CONFIG: osx_moabnomoabpython3.6
+      osx_enable_moabnomoabpython3.6:
+        CONFIG: osx_enable_moabnomoabpython3.6
         UPLOAD_PACKAGES: True
-      osx_moabnomoabpython3.7:
-        CONFIG: osx_moabnomoabpython3.7
+      osx_enable_moabnomoabpython3.7:
+        CONFIG: osx_enable_moabnomoabpython3.7
         UPLOAD_PACKAGES: True
 
   steps:
