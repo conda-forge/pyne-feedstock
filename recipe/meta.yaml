@@ -45,7 +45,7 @@ requirements:
     - numpy
     - pytables
     - cython
-    - moab  # [ enable_moab = 'moab' ]
+    - moab  # [ enable_moab == 'moab' ]
   run:
     - python
     - hdf5
@@ -54,7 +54,7 @@ requirements:
     - scipy
     - future
     - jinja2
-    - moab  # [ enable_moab = 'moab' ]
+    - moab  # [ enable_moab == 'moab' ]
 test:
   requires:
     - nose
