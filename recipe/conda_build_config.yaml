@@ -1,7 +1,0 @@
-moab:
- - nomoab
- - moab
-
-damgc:
- - nodagmc
- - dagmc

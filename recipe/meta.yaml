@@ -4,26 +4,6 @@
 {% set sha256 = "ba05917b0de446ec520857655e77967a783e3bc723299faf5989f532d6b0647a" %}
 {% set variant = "openblas" %}
 
-# ensure moab is defined (needed for conda-smithy recipe-lint)
-{% set moab = moab or "nomoab" %}
-# ensure dagmc is defined (needed for conda-smithy recipe-lint)
-{% set dagmc = dagmc or "nodagmc" %}
-
-
-{% if moab != "nomoab" %}
-{% set prefix = "moab_" + moab %}
-{% else %}
-{% set prefix = "nomoab" %}
-{% endif %}
-
-{% if dagmc != "nodagmc" %}
-{% set prefix = "dagmc_" + dagmc %}
-{% else %}
-{% set prefix = "nodagmc" %}
-{% endif %}
-
-
-
 package:
   name: pyne
   version: {{ version }}
@@ -35,9 +15,7 @@ source:
 
 build:
   number: {{ build }}
-  string: "{{ prefix }}}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
-  # note that builds timeout on mac with many versions of python & numpy
-  skip: True  # [win or (osx and py34) or ((moab == "nomoab") and (dagmc == "dagmc"))]
+  skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
   features:
     - blas_{{ variant }}
@@ -60,11 +38,9 @@ requirements:
     - bzip2 1.0.*
     - xz 5.2.*
     - cython
-    - numpy >= 1.11.*
+    - numpy
     - pytables
     - jinja2
-    - moab # [moab == "moab"]
-    - dagmc # [dagmc == "dagmc" and moab == "moab" ]
   run:
     - python
     - future
@@ -74,20 +50,16 @@ requirements:
     - hdf5 1.10.1
     - bzip2 1.0.*
     - xz 5.2.*
-    - numpy >=1.11.*
+    - numpy
     - scipy
     - pytables
     - jinja2
-    - moab # [moab == "moab"]
-    - dagmc # [dagmc == "dagmc" and moab == "moab" ]
 
 test:
   requires:
     - setuptools
     - nose
     - pytables
-    - moab # [moab == "moab"]
-    - dagmc # [dagmc == "dagmc" and moab == "moab" ]
   source_files:
     - pyne
     - src
