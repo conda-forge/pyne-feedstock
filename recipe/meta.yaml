@@ -59,7 +59,7 @@ requirements:
     - pytables
     - numpy
     - scipy
-    - future
+    - future  # [ py <3.7 ]
     - jinja2
     - moab  # [ enable_moab == 'moab' ]
     - openmc  # [ enable_openmc == 'openmc' ]
