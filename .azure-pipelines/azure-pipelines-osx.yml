@@ -10,23 +10,41 @@ jobs:
   strategy:
     maxParallel: 8
     matrix:
-      osx_enable_moabmoabpython2.7:
-        CONFIG: osx_enable_moabmoabpython2.7
+      osx_enable_moabmoabenable_openmcnoopenmcpython2.7:
+        CONFIG: osx_enable_moabmoabenable_openmcnoopenmcpython2.7
         UPLOAD_PACKAGES: True
-      osx_enable_moabmoabpython3.6:
-        CONFIG: osx_enable_moabmoabpython3.6
+      osx_enable_moabmoabenable_openmcnoopenmcpython3.6:
+        CONFIG: osx_enable_moabmoabenable_openmcnoopenmcpython3.6
         UPLOAD_PACKAGES: True
-      osx_enable_moabmoabpython3.7:
-        CONFIG: osx_enable_moabmoabpython3.7
+      osx_enable_moabmoabenable_openmcnoopenmcpython3.7:
+        CONFIG: osx_enable_moabmoabenable_openmcnoopenmcpython3.7
         UPLOAD_PACKAGES: True
-      osx_enable_moabnomoabpython2.7:
-        CONFIG: osx_enable_moabnomoabpython2.7
+      osx_enable_moabmoabenable_openmcopenmcpython2.7:
+        CONFIG: osx_enable_moabmoabenable_openmcopenmcpython2.7
         UPLOAD_PACKAGES: True
-      osx_enable_moabnomoabpython3.6:
-        CONFIG: osx_enable_moabnomoabpython3.6
+      osx_enable_moabmoabenable_openmcopenmcpython3.6:
+        CONFIG: osx_enable_moabmoabenable_openmcopenmcpython3.6
         UPLOAD_PACKAGES: True
-      osx_enable_moabnomoabpython3.7:
-        CONFIG: osx_enable_moabnomoabpython3.7
+      osx_enable_moabmoabenable_openmcopenmcpython3.7:
+        CONFIG: osx_enable_moabmoabenable_openmcopenmcpython3.7
+        UPLOAD_PACKAGES: True
+      osx_enable_moabnomoabenable_openmcnoopenmcpython2.7:
+        CONFIG: osx_enable_moabnomoabenable_openmcnoopenmcpython2.7
+        UPLOAD_PACKAGES: True
+      osx_enable_moabnomoabenable_openmcnoopenmcpython3.6:
+        CONFIG: osx_enable_moabnomoabenable_openmcnoopenmcpython3.6
+        UPLOAD_PACKAGES: True
+      osx_enable_moabnomoabenable_openmcnoopenmcpython3.7:
+        CONFIG: osx_enable_moabnomoabenable_openmcnoopenmcpython3.7
+        UPLOAD_PACKAGES: True
+      osx_enable_moabnomoabenable_openmcopenmcpython2.7:
+        CONFIG: osx_enable_moabnomoabenable_openmcopenmcpython2.7
+        UPLOAD_PACKAGES: True
+      osx_enable_moabnomoabenable_openmcopenmcpython3.6:
+        CONFIG: osx_enable_moabnomoabenable_openmcopenmcpython3.6
+        UPLOAD_PACKAGES: True
+      osx_enable_moabnomoabenable_openmcopenmcpython3.7:
+        CONFIG: osx_enable_moabnomoabenable_openmcopenmcpython3.7
         UPLOAD_PACKAGES: True
 
   steps:
