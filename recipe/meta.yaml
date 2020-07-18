@@ -1,6 +1,6 @@
 {% set name = "pyne" %}
 {% set version = "0.7.0" %}
-{% set build = "0" %}
+{% set build = 1 %}
 {% set sha256 = "19e104a05aa56ef2e747f5e4a1c4cffefdb57a592a300823265ba72a1b55d4f3" %}
 
 # ensure moab is defined (needed for conda-smithy recipe-lint)
