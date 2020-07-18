@@ -1,17 +1,17 @@
+MACOSX_DEPLOYMENT_TARGET:
+- '10.9'
 c_compiler:
-- gcc
+- clang
 c_compiler_version:
-- '7'
+- '10'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
 cxx_compiler:
-- gxx
+- clangxx
 cxx_compiler_version:
-- '7'
-docker_image:
-- condaforge/linux-anvil-comp7
+- '10'
 enable_moab:
 - nomoab
 enable_openmc:
@@ -21,7 +21,11 @@ fortran_compiler:
 fortran_compiler_version:
 - '7'
 hdf5:
-- 1.10.5
+- 1.10.6
+macos_machine:
+- x86_64-apple-darwin13.4.0
+macos_min_version:
+- '10.9'
 numpy:
 - '1.14'
 pin_run_as_build:
@@ -29,5 +33,4 @@ pin_run_as_build:
     min_pin: x.x
     max_pin: x.x
 python:
-- '2.7'
-
+- 3.6.* *_cpython
