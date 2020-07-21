@@ -1,13 +1,8 @@
-{% set name = "pyne" %}
+{% set org = "pyne" %}
 {% set version = "0.7.0" %}
-{% set build = 1 %}
+{% set build = "0" %}
 {% set sha256 = "19e104a05aa56ef2e747f5e4a1c4cffefdb57a592a300823265ba72a1b55d4f3" %}
 
-# ensure moab is defined (needed for conda-smithy recipe-lint)
-{% set enable_moab = enable_moab or 'nomoab' %}
-
-# ensure openmc is defined (needed for conda-smithy recipe-lint)
-{% set enable_openmc = enable_openmc or 'noopenmc' %}
 
 
 package:
@@ -16,26 +11,12 @@ package:
 
 source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ name }}/pyne/archive/{{ version }}-rc1.tar.gz
+  url: https://github.com/{{ org }}/pyne/archive/{{ version }}-rc1.tar.gz
   sha256: {{ sha256 }}
 
 build:
   number: {{ build }}
-  {% if enable_moab == 'moab' %}
-  {% set moab_prefix = "moab" %}
-  {% else %}
-  {% set moab_prefix = "nomoab" %}
-  {% endif %}
-  
-  {% if enable_openmc == 'openmc' %}
-  {% set openmc_prefix = "openmc" %}
-  {% else %}
-  {% set openmc_prefix = "noopenmc" %}
-  {% endif %}
-  
-  string: "{{ moab_prefix }}_{{ openmc_prefix }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
-
-  skip: True  # [win or (osx and py34) or (py27 and enable_openmc == 'openmc') ]
+  skip: True  # [win or (osx and py34)]
   detect_binary_files_with_prefix: true
 
 requirements:
@@ -51,8 +32,6 @@ requirements:
     - numpy
     - pytables
     - cython
-    - moab  # [ enable_moab == 'moab' ]
-    - openmc  # [ enable_openmc == 'openmc' ]
   run:
     - python
     - hdf5
@@ -61,8 +40,6 @@ requirements:
     - scipy
     - future
     - jinja2
-    - moab  # [ enable_moab == 'moab' ]
-    - openmc  # [ enable_openmc == 'openmc' ]
 test:
   requires:
     - nose
