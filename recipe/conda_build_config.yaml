@@ -1,2 +1,2 @@
 channel_targets:
-  - conda_forge pyne_rc
+  - conda-forge pyne_rc
