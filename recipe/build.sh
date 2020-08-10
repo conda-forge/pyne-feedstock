@@ -13,8 +13,6 @@ ${PYTHON} setup.py install \
   --build-type="Release" \
   --prefix="${PREFIX}" \
   --hdf5="${PREFIX}" \
-  --moab="${PREFIX}" \
-  -DMOAB_INCLUDE_DIR="${PREFIX}/include" \
   -DCMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_VERSION_MIN}" \
   ${skiprpath} \
   --clean \
