@@ -1,10 +1,2 @@
-enable_moab:
-  - nomoab
-  - moab
-
-enable_openmc:
-  - noopenmc
-  - openmc
-
 channel_targets:
   - conda_forge pyne_rc
