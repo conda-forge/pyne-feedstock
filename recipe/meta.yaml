@@ -1,7 +1,7 @@
 {% set org = "pyne" %}
-{% set version = "0.7.0" %}
-{% set build = "6" %}
-{% set sha256 = "a3783a1018f940fa78fbd8798d7c90534d346c02c615dc2ea1accc036697f693" %}
+{% set version = "0.7.0dev" %}
+{% set build = "0" %}
+{% set sha256 = "71afd155a02b3fd73f23b06d977e86ae0937178368fc331dbff658e876d0dd2e" %}
 
 {% set rcnum = "2" %}
 
@@ -11,7 +11,7 @@ package:
 
 source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ org }}/pyne/archive/{{ version }}-rc{{ rcnum }}.tar.gz
+  url: https://github.com/{{ org }}/pyne/archive/develop.tar.gz
   sha256: {{ sha256 }}
 
 build:
