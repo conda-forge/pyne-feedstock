@@ -25,6 +25,8 @@ build:
   {% set moab_prefix = "nomoab" %}
   {% endif %} 
 
+  string: "{{ moab_prefix }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
+
   skip: True  # [win or osx]
   detect_binary_files_with_prefix: true
 
