@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$(uname)" == "Darwin" ]; then
-  skiprpath="-DCMAKE_SKIP_RPATH=TRUE"
-else
-  skiprpath=""
+if [[ -n "$enable_moab" && "$enable_moab" != "nomoab" ]]; then
+  export CONFIGURE_ARGS="--moab=${PREFIX} ${CONFIGURE_ARGS}"
 fi
 
 # Install PyNE
@@ -13,17 +11,11 @@ ${PYTHON} setup.py install \
   --build-type="Release" \
   --prefix="${PREFIX}" \
   --hdf5="${PREFIX}" \
-  --moab="${PREFIX}" \
-  -DCMAKE_OSX_DEPLOYMENT_TARGET="${MACOSX_VERSION_MIN}" \
-  ${skiprpath} \
+  ${CONFIGURE_ARGS} \
   --clean \
   -j "${CPU_COUNT}"
 
 # Create data library
 cd build
-if [ "$(uname)" == "Darwin" ]; then
-  export DYLD_FALLBACK_LIBRARY_PATH="${DYLD_FALLBACK_LIBRARY_PATH}:${PREFIX}/lib"
-else
-  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PREFIX}/lib"
-fi
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PREFIX}/lib"
 ${PYTHON} ${PREFIX}/bin/nuc_data_make
