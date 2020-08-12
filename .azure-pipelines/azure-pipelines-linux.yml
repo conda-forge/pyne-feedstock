@@ -8,16 +8,28 @@ jobs:
     vmImage: ubuntu-16.04
   strategy:
     matrix:
-      linux_64_python3.6.____cpython:
-        CONFIG: linux_64_python3.6.____cpython
+      linux_64_enable_moabmoabpython3.6.____cpython:
+        CONFIG: linux_64_enable_moabmoabpython3.6.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_64_python3.7.____cpython:
-        CONFIG: linux_64_python3.7.____cpython
+      linux_64_enable_moabmoabpython3.7.____cpython:
+        CONFIG: linux_64_enable_moabmoabpython3.7.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
-      linux_64_python3.8.____cpython:
-        CONFIG: linux_64_python3.8.____cpython
+      linux_64_enable_moabmoabpython3.8.____cpython:
+        CONFIG: linux_64_enable_moabmoabpython3.8.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: condaforge/linux-anvil-comp7
+      linux_64_enable_moabnomoabpython3.6.____cpython:
+        CONFIG: linux_64_enable_moabnomoabpython3.6.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: condaforge/linux-anvil-comp7
+      linux_64_enable_moabnomoabpython3.7.____cpython:
+        CONFIG: linux_64_enable_moabnomoabpython3.7.____cpython
+        UPLOAD_PACKAGES: 'True'
+        DOCKER_IMAGE: condaforge/linux-anvil-comp7
+      linux_64_enable_moabnomoabpython3.8.____cpython:
+        CONFIG: linux_64_enable_moabnomoabpython3.8.____cpython
         UPLOAD_PACKAGES: 'True'
         DOCKER_IMAGE: condaforge/linux-anvil-comp7
     maxParallel: 8
