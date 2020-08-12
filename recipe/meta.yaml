@@ -2,7 +2,7 @@
 {% set version = "0.7.0rc2" %}
 {% set branch = "0.7.0-rc" %}
 {% set build = "7" %}
-{% set sha256 = "01b583e98448eeafe9f184738f459bee2a7752e0687ec5e8ea2dfe9fc692c2a5" %}
+{% set sha256 = "03d2b94881c328744d1861627a3328696a047f5aa3e559bf8986ec80134c6fbc" %}
 
 package:
   name: pyne
