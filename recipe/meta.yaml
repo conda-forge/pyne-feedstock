@@ -4,6 +4,7 @@
 {% set build = "7" %}
 {% set sha256 = "03d2b94881c328744d1861627a3328696a047f5aa3e559bf8986ec80134c6fbc" %}
 
+
 package:
   name: pyne
   version: {{ version }}
@@ -11,6 +12,7 @@ package:
 source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
   url: https://github.com/{{ org }}/pyne/archive/{{ branch }}.tar.gz
+
   sha256: {{ sha256 }}
 
 build:
