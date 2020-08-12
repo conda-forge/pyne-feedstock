@@ -1,9 +1,12 @@
 {% set org = "pyne" %}
 {% set version = "0.7.0" %}
-{% set build = "6" %}
+{% set build = "7" %}
 {% set sha256 = "a3783a1018f940fa78fbd8798d7c90534d346c02c615dc2ea1accc036697f693" %}
 
 {% set rcnum = "2" %}
+
+# ensure moab is defined (needed for conda-smithy recipe-lint)
+{% set enable_moab = enable_moab or 'nomoab' %}
 
 package:
   name: pyne
@@ -16,6 +19,12 @@ source:
 
 build:
   number: {{ build }}
+  {% if enable_moab == 'moab' %}
+  {% set moab_prefix = "moab" %}
+  {% else %}
+  {% set moab_prefix = "nomoab" %}
+  {% endif %} 
+
   skip: True  # [win or osx]
   detect_binary_files_with_prefix: true
 
@@ -32,6 +41,7 @@ requirements:
     - numpy
     - pytables
     - cython
+    - moab # [ enable_moab == 'moab']
   run:
     - python
     - hdf5
@@ -40,6 +50,7 @@ requirements:
     - scipy
     - future
     - jinja2
+    - moab # [ enable_moab == 'moab']
 test:
   requires:
     - nose
