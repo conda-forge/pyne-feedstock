@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-if [[ -n "$enable_moab" && "$enable_moab" != "nomoab" ]]; then
-  export CONFIGURE_ARGS="--moab=${PREFIX} ${CONFIGURE_ARGS}"
-fi
-
 # Install PyNE
 export VERBOSE=1
 ${PYTHON} setup.py install \
