@@ -1,7 +1,7 @@
 {% set org = "pyne" %}
 {% set version = "0.7.0" %}
 {% set build = "8" %}
-{% set sha256 = "b7bccada1a5d5edcd25fc614b0b854b71b8494aeed3553ed75ee1f242d54cdf0" %}
+{% set sha256 = "d5149d4c934abb1c864c635086e88ba6c73a49af56131bab8e4ea5df65ba6c74" %}
 
 {% set rcnum = "2" %}
 
