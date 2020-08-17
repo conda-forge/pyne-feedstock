@@ -5,6 +5,9 @@ if [[ -n "$enable_moab" && "$enable_moab" != "nomoab" ]]; then
   export CONFIGURE_ARGS="--moab=${PREFIX} ${CONFIGURE_ARGS}"
 fi
 
+if [[ -n "$enable_dagmc" && "$enable_dagmc" != "nodagmc" ]]; then
+  export CONFIGURE_ARGS="--dagmc=${PREFIX} ${CONFIGURE_ARGS}"
+fi
 # Install PyNE
 export VERBOSE=1
 ${PYTHON} setup.py install \
