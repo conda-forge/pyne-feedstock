@@ -61,7 +61,7 @@ requirements:
     - future
     - jinja2
     - moab  # [ enable_moab == 'moab']
-    - openmc # [ enable_openmc == 'openmc']
+    - openmc  # [ enable_openmc == 'openmc']
 test:
   requires:
     - nose
