@@ -7,6 +7,8 @@
 
 # ensure moab is defined (needed for conda-smithy recipe-lint)
 {% set enable_moab = enable_moab or 'nomoab' %}
+{% set enable_openmc = enable_openmc or 'noopenmc' %}
+
 
 package:
   name: pyne
@@ -25,7 +27,13 @@ build:
   {% set moab_prefix = "nomoab" %}
   {% endif %} 
 
-  string: "{{ moab_prefix }}_py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
+  {% if enable_openmc == 'openmc' %}
+  {% set openmc_prefix = "openmc" %}
+  {% else %}
+  {% set openmc_prefix = "noopenmc" %}
+  {% endif %} 
+
+  string: "{{ moab_prefix }}_{{ openmc_prefix }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}"
 
   skip: True  # [win or osx]
   detect_binary_files_with_prefix: true
@@ -53,6 +61,7 @@ requirements:
     - future
     - jinja2
     - moab  # [ enable_moab == 'moab']
+    - openmc # [ enable_openmc == 'openmc']
 test:
   requires:
     - nose
