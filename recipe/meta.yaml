@@ -1,6 +1,6 @@
 {% set org = "pyne" %}
 {% set version = "0.7.2" %}
-{% set build = "0" %}
+{% set build = 1 %}
 # Update the SHA256: `shasum -a 256 pyne.X.Y.Z.tar.gz`
 {% set sha256 = "9b2d3694f2879f0ec8210176887d1133344dd8831d31f94524b66126308753c9" %}
 
