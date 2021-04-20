@@ -34,7 +34,7 @@ build:
 
   string: {{ moab_prefix }}_{{ openmc_prefix }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}
 
-  skip: true  # [win or osx]
+  skip: true  # [win]
   detect_binary_files_with_prefix: true
 
 requirements:
