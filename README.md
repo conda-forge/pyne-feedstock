@@ -27,171 +27,115 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcnoopenmcfortran_compiler_version7python3.6.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.17python3.6.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcnoopenmcfortran_compiler_version7python3.6.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.17python3.6.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcnoopenmcfortran_compiler_version7python3.7.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.17python3.7.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcnoopenmcfortran_compiler_version7python3.7.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.17python3.7.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcnoopenmcfortran_compiler_version7python3.8.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.17python3.8.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcnoopenmcfortran_compiler_version7python3.8.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.17python3.8.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcopenmcfortran_compiler_version7python3.6.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.19python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcopenmcfortran_compiler_version7python3.6.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcnoopenmcnumpy1.19python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcopenmcfortran_compiler_version7python3.7.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcopenmcnumpy1.17python3.6.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcopenmcfortran_compiler_version7python3.7.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcopenmcnumpy1.17python3.6.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcopenmcfortran_compiler_version7python3.8.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcopenmcnumpy1.17python3.7.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabmoabenable_openmcopenmcfortran_compiler_version7python3.8.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcopenmcnumpy1.17python3.7.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version7python3.6.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcopenmcnumpy1.17python3.8.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version7python3.6.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcopenmcnumpy1.17python3.8.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version7python3.7.____cpython</td>
+              <td>linux_64_enable_moabmoabenable_openmcopenmcnumpy1.19python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version7python3.7.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabmoabenable_openmcopenmcnumpy1.19python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version7python3.8.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.17python3.6.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version7python3.8.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.17python3.6.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcopenmcfortran_compiler_version7python3.6.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.17python3.7.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcopenmcfortran_compiler_version7python3.6.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.17python3.7.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcopenmcfortran_compiler_version7python3.7.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.17python3.8.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcopenmcfortran_compiler_version7python3.7.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.17python3.8.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcopenmcfortran_compiler_version7python3.8.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.19python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version7cxx_compiler_version7enable_moabnomoabenable_openmcopenmcfortran_compiler_version7python3.8.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcnoopenmcnumpy1.19python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcnoopenmcfortran_compiler_version9python3.6.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.17python3.6.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcnoopenmcfortran_compiler_version9python3.6.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.17python3.6.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcnoopenmcfortran_compiler_version9python3.7.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.17python3.7.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcnoopenmcfortran_compiler_version9python3.7.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.17python3.7.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcnoopenmcfortran_compiler_version9python3.8.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.17python3.8.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcnoopenmcfortran_compiler_version9python3.8.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.17python3.8.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcopenmcfortran_compiler_version9python3.6.____cpython</td>
+              <td>linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.19python3.9.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcopenmcfortran_compiler_version9python3.6.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcopenmcfortran_compiler_version9python3.7.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcopenmcfortran_compiler_version9python3.7.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcopenmcfortran_compiler_version9python3.8.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabmoabenable_openmcopenmcfortran_compiler_version9python3.8.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version9python3.6.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version9python3.6.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version9python3.7.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version9python3.7.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version9python3.8.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcnoopenmcfortran_compiler_version9python3.8.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcopenmcfortran_compiler_version9python3.6.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcopenmcfortran_compiler_version9python3.6.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcopenmcfortran_compiler_version9python3.7.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcopenmcfortran_compiler_version9python3.7.____cpython" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
-              <td>linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcopenmcfortran_compiler_version9python3.8.____cpython</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=5454&branchName=master">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_c_compiler_version9cxx_compiler_version9enable_moabnomoabenable_openmcopenmcfortran_compiler_version9python3.8.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pyne-feedstock?branchName=master&jobName=linux&configuration=linux_64_enable_moabnomoabenable_openmcopenmcnumpy1.19python3.9.____cpython" alt="variant">
                 </a>
               </td>
             </tr>
@@ -216,6 +160,7 @@ Installing `pyne` from the `conda-forge` channel can be achieved by adding `cond
 
 ```
 conda config --add channels conda-forge
+conda config --set channel_priority strict
 ```
 
 Once the `conda-forge` channel has been enabled, `pyne` can be installed with:
@@ -286,9 +231,9 @@ build distinct package versions.
 
 In order to produce a uniquely identifiable distribution:
  * If the version of a package **is not** being increased, please add or increase
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string).
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string).
  * If the version of a package **is** being increased, please remember to return
-   the [``build/number``](https://conda.io/docs/user-guide/tasks/build-packages/define-metadata.html#build-number-and-string)
+   the [``build/number``](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#build-number-and-string)
    back to 0.
 
 Feedstock Maintainers
