@@ -51,6 +51,7 @@ requirements:
     - numpy
     - pytables
     - cython
+    - setuptools 48.*
     - progress
     - moab  # [ enable_moab == 'moab']
   run:
