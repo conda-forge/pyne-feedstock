@@ -21,7 +21,7 @@ enable_openmc:
 fortran_compiler:
 - gfortran
 fortran_compiler_version:
-- '10'
+- '7'
 hdf5:
 - 1.10.6
 numpy:
