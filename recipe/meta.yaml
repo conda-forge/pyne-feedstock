@@ -59,6 +59,7 @@ requirements:
     - numpy
     - scipy
     - future
+    - progress
     - jinja2
     - moab  # [ enable_moab == 'moab']
     - openmc  # [ enable_openmc == 'openmc']
