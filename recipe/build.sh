@@ -12,8 +12,7 @@ ${PYTHON} setup.py install \
   --prefix="${PREFIX}" \
   --hdf5="${PREFIX}" \
   ${CONFIGURE_ARGS} \
-  --clean \
-  -j "${CPU_COUNT}"
+  --clean 
 
 # Create data library
 cd build
