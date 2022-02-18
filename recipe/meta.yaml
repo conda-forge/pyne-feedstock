@@ -44,7 +44,7 @@ requirements:
     - pkg-config
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
-    - {{ compiler("fortran") }}
+    - {{ compiler("fortran") }} 7.*
   host:
     - python
     - hdf5
