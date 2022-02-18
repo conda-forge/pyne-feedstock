@@ -11,6 +11,7 @@ ${PYTHON} setup.py install \
   --build-type="Release" \
   --prefix="${PREFIX}" \
   --hdf5="${PREFIX}" \
+  --no_spatial_solvers \
   ${CONFIGURE_ARGS} \
   --clean 
 
