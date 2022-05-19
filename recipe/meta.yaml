@@ -1,8 +1,8 @@
 {% set org = "pyne" %}
-{% set version = "0.7.5" %}
+{% set version = "0.7.7" %}
 {% set build = 0 %}
 # Update the SHA256: `shasum -a 256 pyne.X.Y.Z.tar.gz`
-{% set sha256 = "80143d5e232b89ffd89121363c0e1e615acc28c26f5d7682521eb9baf98311c4" %}
+{% set sha256 = "3cc59621825cee343ea764174f974c4aecea91da44e1be99029784c90b8481ea" %}
 
 # ensure moab is defined (needed for conda-smithy recipe-lint)
 {% set enable_moab = enable_moab or 'nomoab' %}
