@@ -49,7 +49,7 @@ requirements:
     - setuptools
     - numpy
     - pytables
-    - "cython<3"
+    - cython <3
     - moab  # [ enable_moab == 'moab']
   run:
     - python
