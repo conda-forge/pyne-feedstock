@@ -37,6 +37,7 @@ build:
 requirements:
   build:
     - cmake
+    - make
     - pkg-config
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
