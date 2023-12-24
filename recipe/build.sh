@@ -8,7 +8,6 @@ fi
 # Install PyNE
 export VERBOSE=1
 ${PYTHON} setup.py install \
-  --build-type="Release" \
   --prefix="${PREFIX}" \
   --hdf5="${PREFIX}" \
   ${CONFIGURE_ARGS} \
