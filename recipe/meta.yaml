@@ -1,9 +1,9 @@
 {% set org = "pyne" %}
-{% set version = "0.7.0dev" %}
-{% set build = "1" %}
-{% set sha256 = "71afd155a02b3fd73f23b06d977e86ae0937178368fc331dbff658e876d0dd2e" %}
+{% set version = "0.7.0rc2" %}
+{% set branch = "develop" %}
+{% set build = "7" %}
+{% set sha256 = "f0a3e872270696dc49369911e1134376053a895db56076da567fdb174a844616" %}
 
-{% set rcnum = "2" %}
 
 package:
   name: pyne
@@ -11,13 +11,13 @@ package:
 
 source:
   fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ org }}/pyne/archive/develop.tar.gz
+  url: https://github.com/{{ org }}/pyne/archive/{{ branch }}.tar.gz
+
   sha256: {{ sha256 }}
 
 build:
   number: {{ build }}
-  skip: True  # [win or osx]
-  detect_binary_files_with_prefix: true
+  skip: True  # [win]
 
 requirements:
   build:
