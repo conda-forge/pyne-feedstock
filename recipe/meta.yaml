@@ -47,6 +47,7 @@ requirements:
   build:
     - cmake
     - pkg-config
+    - {{ stdlib("c") }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - {{ compiler("fortran") }}
@@ -71,9 +72,10 @@ requirements:
     - jinja2
     - moab  # [ enable_moab == 'moab']
     - openmc  # [ enable_openmc == 'openmc']
-    - dagmc # [ dagmc_prefix == 'dagmc']
+    - dagmc  # [ dagmc_prefix == 'dagmc']
 test:
   requires:
+    - {{ stdlib("c") }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - {{ compiler("fortran") }}
