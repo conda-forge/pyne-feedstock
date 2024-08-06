@@ -46,6 +46,7 @@ build:
 requirements:
   build:
     - cmake
+    - make
     - pkg-config
     - {{ stdlib("c") }}
     - {{ compiler("c") }}
@@ -57,7 +58,9 @@ requirements:
     - cython
     - setuptools
   host:
+    - libblas
     - liblapack
+    - setuptools
     - python
     - numpy
     - pytables
