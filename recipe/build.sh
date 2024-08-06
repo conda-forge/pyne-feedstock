@@ -15,5 +15,6 @@ ${PYTHON} setup.py install \
   -j "${CPU_COUNT}"
 
 # Create data library
-cd ${HOME}
-nuc_data_make
+cd build
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PREFIX}/lib"
+${PYTHON} ${PREFIX}/bin/nuc_data_make
