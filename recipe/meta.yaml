@@ -93,12 +93,7 @@ requirements:
     - dagmc  # [ dagmc_prefix == 'dagmc']
 test:
   requires:
-    - {{ stdlib("c") }}
-    - {{ compiler("c") }}
-    - {{ compiler("cxx") }}
-    - {{ compiler("fortran") }}
     - pytest
-    - pytables
   source_files:
     - pyne
     - src
