@@ -48,6 +48,7 @@ requirements:
     - cmake
     - make
     - pkg-config
+    - progress
     - {{ stdlib("c") }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
@@ -60,13 +61,13 @@ requirements:
     - eigen
     - numpy
     - scipy
-    - matplotlib
+    - matplotlib-base
     - git
     - setuptools
     - future
-    - progress
     - meson
   host:
+    - progress
     - libblas
     - liblapack
     - setuptools
@@ -74,11 +75,12 @@ requirements:
     - eigen
     - numpy
     - scipy
-    - matplotlib
+    - matplotlib-base
     - pytables
     - cython
     - moab  # [ enable_moab == 'moab']
   run:
+    - progress
     - python
     - pytables
     - numpy
