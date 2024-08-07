@@ -57,12 +57,24 @@ requirements:
     - jinja2
     - cython
     - setuptools
+    - eigen
+    - numpy
+    - scipy
+    - matplotlib
+    - git
+    - setuptools
+    - future
+    - progress
+    - meson
   host:
     - libblas
     - liblapack
     - setuptools
     - python
+    - eigen
     - numpy
+    - scipy
+    - matplotlib
     - pytables
     - cython
     - moab  # [ enable_moab == 'moab']
@@ -73,6 +85,7 @@ requirements:
     - scipy
     - future
     - jinja2
+    - eigen
     - moab  # [ enable_moab == 'moab']
     - openmc  # [ enable_openmc == 'openmc']
     - dagmc  # [ dagmc_prefix == 'dagmc']
