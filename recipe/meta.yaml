@@ -42,6 +42,7 @@ build:
 
   skip: true  # [win or osx]
   detect_binary_files_with_prefix: true
+  preserve_egg_dir: true
 
 requirements:
   build:
