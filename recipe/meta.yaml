@@ -45,49 +45,64 @@ build:
 
 requirements:
   build:
-    - cmake
-    - make
     - pkg-config
-    - progress
+    - python
     - {{ stdlib("c") }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - {{ compiler("fortran") }}
+    - cmake
+    - make
+    - libblas
     - liblapack
-    - python
-    - jinja2
-    - cython
-    - setuptools
     - eigen
     - numpy
     - scipy
     - matplotlib-base
     - git
     - setuptools
+    - pytest
+    - pytables
+    - jinja2    
+    - cython
     - future
+    - progress
     - meson
   host:
-    - progress
     - libblas
     - liblapack
-    - setuptools
     - python
     - eigen
     - numpy
     - scipy
     - matplotlib-base
+    - git
+    - setuptools
+    - pytest
     - pytables
+    - jinja2
     - cython
+    - future
+    - progress
+    - meson 
     - moab  # [ enable_moab == 'moab']
   run:
-    - progress
+    - libblas
+    - liblapack
     - python
-    - pytables
+    - eigen
     - numpy
     - scipy
-    - future
+    - matplotlib-base
+    - git
+    - setuptools
+    - pytest
+    - pytables
     - jinja2
-    - eigen
+    - cython
+    - future
+    - progress
+    - meson 
     - moab  # [ enable_moab == 'moab']
     - openmc  # [ enable_openmc == 'openmc']
     - dagmc  # [ dagmc_prefix == 'dagmc']
