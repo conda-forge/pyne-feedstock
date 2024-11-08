@@ -14,9 +14,9 @@ package:
   version: {{ version }}
 
 source:
-  fn: pyne-{{ version }}-{{ sha256 }}.tar.gz
-  url: https://github.com/{{ org }}/pyne/archive/{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  git_url: https://github.com/pyne/pyne
+  git_rev: develop
+
 
 build:
   number: {{ build }}
@@ -32,38 +32,84 @@ build:
   {% set openmc_prefix = "noopenmc" %}
   {% endif %} 
 
-  string: {{ moab_prefix }}_{{ openmc_prefix }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}
+  {% if enable_dagmc == 'dagmc' and enable_moab == 'moab' %}
+  {% set dagmc_prefix = "dagmc" %}
+  {% else %}
+  {% set dagmc_prefix = "nodagmc" %}
+  {% endif %} 
+
+  string: {{ moab_prefix }}_{{ openmc_prefix }}_{{ dagmc_prefix }}py{{ CONDA_PY }}h{{ PKG_HASH }}_{{ build }}
 
   skip: true  # [win or osx]
   detect_binary_files_with_prefix: true
+  preserve_egg_dir: true
 
 requirements:
   build:
-    - cmake
     - pkg-config
+    - python
+    - {{ stdlib("c") }}
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - {{ compiler("fortran") }}
-  host:
-    - python
-    - hdf5
-    - numpy
-    - pytables
-    - cython
-    - moab  # [ enable_moab == 'moab']
-  run:
-    - python
-    - hdf5
-    - pytables
+    - cmake
+    - make
+    - libblas
+    - liblapack
+    - eigen
     - numpy
     - scipy
+    - matplotlib-base
+    - git
+    - setuptools
+    - pytest
+    - pytables
+    - jinja2    
+    - cython
     - future
+    - progress
+    - meson
+  host:
+    - libblas
+    - liblapack
+    - python
+    - eigen
+    - numpy
+    - scipy
+    - matplotlib-base
+    - git
+    - setuptools
+    - pytest
+    - pytables
     - jinja2
+    - cython
+    - future
+    - progress
+    - meson 
+    - moab  # [ enable_moab == 'moab']
+  run:
+    - libblas
+    - liblapack
+    - python
+    - eigen
+    - numpy
+    - scipy
+    - matplotlib-base
+    - git
+    - setuptools
+    - pytest
+    - pytables
+    - jinja2
+    - cython
+    - future
+    - progress
+    - meson 
     - moab  # [ enable_moab == 'moab']
     - openmc  # [ enable_openmc == 'openmc']
+    - dagmc  # [ dagmc_prefix == 'dagmc']
 test:
   requires:
-    - nose
+    - pytest
   source_files:
     - pyne
     - src
@@ -82,3 +128,4 @@ extra:
     - bam241
     - kkiesling
     - opotowsky
+    - bquan0
