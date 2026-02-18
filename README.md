@@ -3,11 +3,15 @@ About pyne-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/pyne-feedstock/blob/main/LICENSE.txt)
 
-Home: http://pyne.io/
+Home: https://pyne.io/
 
 Package license: BSD-3-Clause
 
 Summary: The nuclear engineering toolkit
+
+Development: https://github.com/pyne/pyne
+
+Documentation: https://pyne.io/
 
 Current build status
 ====================
