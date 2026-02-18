@@ -27,6 +27,9 @@ build:
   number: ${{ build_number }}
   string: ${{ enable_moab }}_${{ enable_openmc }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   skip:
+    # Global pinning of 'hdf5 1.14.6.*' for 'python 3.10.*' makes pytables
+    # solve impossible.
+    - match(python, "<3.11")
     - win
     - osx
   prefix_detection:
