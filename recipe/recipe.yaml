@@ -15,6 +15,7 @@ source:
     - use-setuptools._distutils.patch
     - use-policy_max-in-cmake_minimum_required.patch
     - use-python3-cmake-variables.patch
+    - use-private-in-target_link_libraries.patch
 
 build:
   number: 1
