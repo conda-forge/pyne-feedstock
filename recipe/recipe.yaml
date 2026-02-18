@@ -16,6 +16,7 @@ source:
     - use-policy_max-in-cmake_minimum_required.patch
     - use-python3-cmake-variables.patch
     - use-private-in-target_link_libraries.patch
+    - ignore-unknown-arguments-passed-to-setup.patch
 
 build:
   number: 1
