@@ -23,6 +23,7 @@ source:
     - fix-cython-cppclass-constructor-resolution.patch
     - use-setuptools-for-setup_sub.py.patch
     - ensure-meson-backend-for-f2py.patch
+    - use-importlib-in-tests.patch
 
 build:
   number: ${{ build_number }}

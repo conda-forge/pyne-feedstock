@@ -1,0 +1,62 @@
+From dd705917df04266440ad14007ba0bff74aaa5924 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 09:04:31 -0700
+Subject: [PATCH] fix: replace imp with importlib.util in test_dagmc and
+ test_source_sampling
+
+imp was removed in Python 3.12. Both test files used imp.find_module /
+imp.load_module solely to check whether a pyne submodule exists before
+deciding to skip the test suite. Replace with the equivalent
+importlib.util.find_spec() call, which raises ImportError (triggering
+SkipTest) when the module is not present.
+---
+ tests/test_dagmc.py           | 7 +++----
+ tests/test_source_sampling.py | 7 +++----
+ 2 files changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/tests/test_dagmc.py b/tests/test_dagmc.py
+index f944cb9d..e2668b37 100644
+--- a/tests/test_dagmc.py
++++ b/tests/test_dagmc.py
+@@ -6,7 +6,7 @@ import warnings
+ from nose.tools import assert_equal, assert_almost_equal, assert_raises, assert_true
+ from nose.plugins.skip import SkipTest
+ from numpy.testing import assert_array_equal
+-import imp
++import importlib.util
+ import multiprocessing
+ import numpy as np
+ 
+@@ -18,9 +18,8 @@ warnings.simplefilter("ignore", QAWarning)
+ try:
+     from pyne.mesh import Mesh
+     # See if dagmc module exists but do not import it
+-    pyne_info = imp.find_module('pyne')
+-    pyne_mod = imp.load_module('pyne', *pyne_info)
+-    imp.find_module('dagmc', pyne_mod.__path__)
++    if importlib.util.find_spec('pyne.dagmc') is None:
++        raise ImportError
+ except ImportError:
+     raise SkipTest
+ 
+diff --git a/tests/test_source_sampling.py b/tests/test_source_sampling.py
+index 50b04efa..ef412ff3 100644
+--- a/tests/test_source_sampling.py
++++ b/tests/test_source_sampling.py
+@@ -12,10 +12,9 @@ from numpy.testing import assert_array_equal, assert_array_almost_equal
+ try:
+     from pyne.mesh import Mesh
+     # see if the source sampling module exists but do not import it
+-    import imp
+-    pyne_info = imp.find_module('pyne')
+-    pyne_mod = imp.load_module('pyne', *pyne_info)
+-    imp.find_module('source_sampling', pyne_mod.__path__)
++    import importlib.util
++    if importlib.util.find_spec('pyne.source_sampling') is None:
++        raise ImportError
+ except ImportError:
+     from nose.plugins.skip import SkipTest
+     raise SkipTest
+-- 
+2.53.0
+
