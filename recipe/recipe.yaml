@@ -115,8 +115,6 @@ tests:
         - pyne.fortranformat
         - pyne.gui
         - pyne/nuc_data.h5
-      files:
-        - lib/libpyne*
 
   - python:
       imports:
