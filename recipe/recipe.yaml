@@ -27,6 +27,7 @@ requirements:
     - ${{ compiler("fortran") }}
     - cmake
     - pkg-config
+    - setuptools
   host:
     - python
     - hdf5
