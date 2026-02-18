@@ -74,6 +74,13 @@ tests:
       files:
         - lib/libpyne*
 
+  - python:
+      imports:
+        - pyne
+        - pyne.pyne_config.pyne_conf
+      pip_check: true
+      python_version: ${{ python }}
+
   - files:
       source:
         - pyne
@@ -83,7 +90,7 @@ tests:
       run:
         - nose
     script:
-      - ${PYTHON} -c "from pyne.pyne_config import pyne_conf; print(pyne_conf.NUC_DATA_PATH)"
+      - python -c "from pyne.pyne_config import pyne_conf; print(pyne_conf.NUC_DATA_PATH)"
       - cd tests
       # It takes too long to download data files for CI
       - rm -f test_endf.py xs/test_data_source.py test_fortran.py test_data_nofile.py test_materials_library.py
