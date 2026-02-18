@@ -30,6 +30,7 @@ requirements:
     - ${{ compiler("cxx") }}
     - ${{ compiler("fortran") }}
     - cmake
+    - make
     - pkg-config
   host:
     - python
