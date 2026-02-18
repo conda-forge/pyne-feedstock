@@ -1,0 +1,25 @@
+From 382ca1b2f52cd84aee5d46d653294be0c8a9760f Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Tue, 17 Feb 2026 19:20:34 -0700
+Subject: [PATCH] fix: imp was removed in favor of importlib in Python 3.12
+
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index ae5ac919..50518001 100755
+--- a/setup.py
++++ b/setup.py
+@@ -35,7 +35,7 @@ import io
+ import os
+ import re
+ import sys
+-import imp
++import importlib
+ import ssl
+ import shutil
+ import tarfile
+-- 
+2.53.0
+

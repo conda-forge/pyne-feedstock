@@ -10,6 +10,8 @@ package:
 source:
   url: https://github.com/pyne/pyne/archive/${{ version }}.tar.gz
   sha256: 80143d5e232b89ffd89121363c0e1e615acc28c26f5d7682521eb9baf98311c4
+  patches:
+    - use-importlib.patch
 
 build:
   number: 1
