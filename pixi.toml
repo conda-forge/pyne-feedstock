@@ -23,12 +23,6 @@ description = "List contents of all packages found in rattler-build build direct
 [tasks.build]
 cmd = "rattler-build build --recipe recipe"
 description = "Build pyne-feedstock directly (without setup scripts), no particular variant specified"
-[tasks."build-linux_64_enable_moabmoabenable_openmcnoopenmcpython3.10.____cpython"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcnoopenmcpython3.10.____cpython.yaml"
-description = "Build pyne-feedstock with variant linux_64_enable_moabmoabenable_openmcnoopenmcpython3.10.____cpython directly (without setup scripts)"
-[tasks."inspect-linux_64_enable_moabmoabenable_openmcnoopenmcpython3.10.____cpython"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcnoopenmcpython3.10.____cpython.yaml"
-description = "List contents of pyne-feedstock packages built for variant linux_64_enable_moabmoabenable_openmcnoopenmcpython3.10.____cpython"
 [tasks."build-linux_64_enable_moabmoabenable_openmcnoopenmcpython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcnoopenmcpython3.11.____cpython.yaml"
 description = "Build pyne-feedstock with variant linux_64_enable_moabmoabenable_openmcnoopenmcpython3.11.____cpython directly (without setup scripts)"
@@ -47,12 +41,6 @@ description = "Build pyne-feedstock with variant linux_64_enable_moabmoabenable_
 [tasks."inspect-linux_64_enable_moabmoabenable_openmcnoopenmcpython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcnoopenmcpython3.13.____cp313.yaml"
 description = "List contents of pyne-feedstock packages built for variant linux_64_enable_moabmoabenable_openmcnoopenmcpython3.13.____cp313"
-[tasks."build-linux_64_enable_moabmoabenable_openmcopenmcpython3.10.____cpython"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcopenmcpython3.10.____cpython.yaml"
-description = "Build pyne-feedstock with variant linux_64_enable_moabmoabenable_openmcopenmcpython3.10.____cpython directly (without setup scripts)"
-[tasks."inspect-linux_64_enable_moabmoabenable_openmcopenmcpython3.10.____cpython"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcopenmcpython3.10.____cpython.yaml"
-description = "List contents of pyne-feedstock packages built for variant linux_64_enable_moabmoabenable_openmcopenmcpython3.10.____cpython"
 [tasks."build-linux_64_enable_moabmoabenable_openmcopenmcpython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcopenmcpython3.11.____cpython.yaml"
 description = "Build pyne-feedstock with variant linux_64_enable_moabmoabenable_openmcopenmcpython3.11.____cpython directly (without setup scripts)"
@@ -71,12 +59,6 @@ description = "Build pyne-feedstock with variant linux_64_enable_moabmoabenable_
 [tasks."inspect-linux_64_enable_moabmoabenable_openmcopenmcpython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_enable_moabmoabenable_openmcopenmcpython3.13.____cp313.yaml"
 description = "List contents of pyne-feedstock packages built for variant linux_64_enable_moabmoabenable_openmcopenmcpython3.13.____cp313"
-[tasks."build-linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.10.____cpython"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.10.____cpython.yaml"
-description = "Build pyne-feedstock with variant linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.10.____cpython directly (without setup scripts)"
-[tasks."inspect-linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.10.____cpython"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.10.____cpython.yaml"
-description = "List contents of pyne-feedstock packages built for variant linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.10.____cpython"
 [tasks."build-linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.11.____cpython.yaml"
 description = "Build pyne-feedstock with variant linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.11.____cpython directly (without setup scripts)"
@@ -95,12 +77,6 @@ description = "Build pyne-feedstock with variant linux_64_enable_moabnomoabenabl
 [tasks."inspect-linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.13.____cp313"]
 cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.13.____cp313.yaml"
 description = "List contents of pyne-feedstock packages built for variant linux_64_enable_moabnomoabenable_openmcnoopenmcpython3.13.____cp313"
-[tasks."build-linux_64_enable_moabnomoabenable_openmcopenmcpython3.10.____cpython"]
-cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabnomoabenable_openmcopenmcpython3.10.____cpython.yaml"
-description = "Build pyne-feedstock with variant linux_64_enable_moabnomoabenable_openmcopenmcpython3.10.____cpython directly (without setup scripts)"
-[tasks."inspect-linux_64_enable_moabnomoabenable_openmcopenmcpython3.10.____cpython"]
-cmd = "inspect_artifacts --recipe-dir recipe -m .ci_support/linux_64_enable_moabnomoabenable_openmcopenmcpython3.10.____cpython.yaml"
-description = "List contents of pyne-feedstock packages built for variant linux_64_enable_moabnomoabenable_openmcopenmcpython3.10.____cpython"
 [tasks."build-linux_64_enable_moabnomoabenable_openmcopenmcpython3.11.____cpython"]
 cmd = "rattler-build build --recipe recipe -m .ci_support/linux_64_enable_moabnomoabenable_openmcopenmcpython3.11.____cpython.yaml"
 description = "Build pyne-feedstock with variant linux_64_enable_moabnomoabenable_openmcopenmcpython3.11.____cpython directly (without setup scripts)"
