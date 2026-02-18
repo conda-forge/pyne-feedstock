@@ -47,7 +47,7 @@ requirements:
   host:
     - python
     - setuptools
-    - meson-python  # required for fortran
+    - meson-python  # required for f2py in pyne/CMakeLists.txt
     - hdf5
     - numpy
     - pytables
