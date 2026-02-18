@@ -65,11 +65,55 @@ requirements:
 
 tests:
   - package_contents:
+      bin:
+        - aceviewer
+        - activation_responses.py
+        - expand_tags.py
+        - gtcadis.py
+        - meshtal_to_mesh
+        - nuc_data_make
+        - ptrac_to_hdf5
+        - r2s.py
+        - ssw_combine.py
+        - tape9
       include:
+        - pyne/_atomic_data.h
+        - pyne/_decay.h
+        - pyne/atomic_data.h
+        - pyne/cram.h
+        - pyne/cram.hpp
+        - pyne/dagmc_bridge.h
+        - pyne/data.h
+        - pyne/decay.h
+        - pyne/enrichment.h
+        - pyne/enrichment_cascade.h
+        - pyne/enrichment_symbolic.h
+        - pyne/extra_types.h
+        - pyne/h5wrap.h
+        - pyne/json-forwards.h
+        - pyne/json.h
+        - pyne/jsoncustomwriter.h
+        - pyne/material.h
+        - pyne/material_library.h
+        - pyne/measure.h
+        - pyne/nucname.h
+        - pyne/particle.h
         - pyne/pyne.h
+        - pyne/rxname.h
+        - pyne/source.h
+        - pyne/source_sampling.h
+        - pyne/tally.h
+        - pyne/transmuters.h
+        - pyne/utils.h
       lib:
         - pyne
       site_packages:
+        - pyne
+        - pyne.apigen
+        - pyne.cli
+        - pyne.dbgen
+        - pyne.fortranformat
+        - pyne.gui
         - pyne/nuc_data.h5
       files:
         - lib/libpyne*
@@ -77,7 +121,6 @@ tests:
   - python:
       imports:
         - pyne
-        - pyne.pyne_config.pyne_conf
       pip_check: true
       python_version: ${{ python }}
 
