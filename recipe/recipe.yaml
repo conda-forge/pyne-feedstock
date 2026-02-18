@@ -17,6 +17,7 @@ source:
     - use-python3-cmake-variables.patch
     - use-private-in-target_link_libraries.patch
     - ignore-unknown-arguments-passed-to-setup.patch
+    - use-fallow-argument-mismatch-for-fortran.patch
 
 build:
   number: 1
