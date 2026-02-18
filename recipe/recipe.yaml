@@ -19,6 +19,7 @@ source:
     - ignore-unknown-arguments-passed-to-setup.patch
     - use-fallow-argument-mismatch-for-fortran.patch
     - update-to-cython3.patch
+    - fix-cython-cppclass-constructor-resolution.patch
 
 build:
   number: 1
