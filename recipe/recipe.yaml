@@ -20,6 +20,7 @@ source:
     - use-fallow-argument-mismatch-for-fortran.patch
     - update-to-cython3.patch
     - fix-cython-cppclass-constructor-resolution.patch
+    - use-setuptools-for-setup_sub.py.patch
 
 build:
   number: 1

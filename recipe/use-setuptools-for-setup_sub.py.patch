@@ -1,0 +1,45 @@
+From 84a149ef8c325b2e9f1dd5461adfa8e9187981a1 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 00:51:28 -0700
+Subject: [PATCH] fix: migrate setup_sub.py from distutils/imp to setuptools
+
+imp was removed in Python 3.12 (ModuleNotFoundError: No module named
+'imp'). distutils is also gone. Drop the unused imp import and the
+unused distutils core/dir_util/sysconfig imports. Replace
+distutils.core.setup with setuptools.setup and collapse the
+Python 2/3 urllib compat shim to the Python 3 form.
+---
+ setup_sub.py | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/setup_sub.py b/setup_sub.py
+index 60193fec..ef9fb2af 100755
+--- a/setup_sub.py
++++ b/setup_sub.py
+@@ -6,7 +6,6 @@ import io
+ import os
+ import re
+ import sys
+-import imp
+ import shutil
+ import tarfile
+ import argparse
+@@ -14,13 +13,9 @@ import platform
+ import warnings
+ import subprocess
+ from glob import glob
+-from distutils import core, dir_util, sysconfig
+ from contextlib import contextmanager
+-if sys.version_info[0] < 3:
+-    from urllib import urlopen
+-else:
+-    from urllib.request import urlopen
+-from distutils.core import setup
++from urllib.request import urlopen
++from setuptools import setup
+ 
+ 
+ VERSION = '0.7.1'
+-- 
+2.53.0
+
