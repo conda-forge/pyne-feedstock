@@ -2,6 +2,7 @@ schema_version: 1
 
 context:
   version: "0.7.5"
+  build_number: 1
 
 package:
   name: pyne
@@ -23,8 +24,7 @@ source:
     - use-setuptools-for-setup_sub.py.patch
 
 build:
-  number: 1
-  string: ${{ enable_moab }}_${{ enable_openmc }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build }}
+  string: ${{ enable_moab }}_${{ enable_openmc }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   skip:
     - win
     - osx
