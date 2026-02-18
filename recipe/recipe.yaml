@@ -1,0 +1,75 @@
+schema_version: 1
+
+context:
+  version: "0.7.5"
+
+package:
+  name: pyne
+  version: ${{ version }}
+
+source:
+  url: https://github.com/pyne/pyne/archive/${{ version }}.tar.gz
+  sha256: 80143d5e232b89ffd89121363c0e1e615acc28c26f5d7682521eb9baf98311c4
+
+build:
+  number: 1
+  string: ${{ moab_prefix }}_${{ openmc_prefix }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build }}
+  skip:
+    - win
+    - osx
+  prefix_detection:
+    ignore_binary_files: true
+
+requirements:
+  build:
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - ${{ compiler("fortran") }}
+    - cmake
+    - pkg-config
+  host:
+    - python
+    - hdf5
+    - numpy
+    - pytables
+    - cython
+    - if: enable_moab == "moab"
+      then: moab
+  run:
+    - python
+    - hdf5
+    - pytables
+    - numpy
+    - scipy
+    - future
+    - jinja2
+    - if: enable_moab == "moab"
+      then: moab
+    - if: enable_openmc == "openmc"
+      then: openmc
+
+tests:
+  - files:
+      source:
+        - pyne
+        - src
+        - tests
+    requirements:
+      run:
+        - nose
+
+about:
+  license: BSD-3-Clause
+  license_file: license.txt
+  summary: The nuclear engineering toolkit
+  homepage: https://pyne.io/
+  repository: https://github.com/pyne/pyne
+  documentation: https://pyne.io/
+
+extra:
+  recipe-maintainers:
+    - scopatz
+    - gonuke
+    - bam241
+    - kkiesling
+    - opotowsky
