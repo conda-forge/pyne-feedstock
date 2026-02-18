@@ -25,6 +25,7 @@ source:
     - ensure-meson-backend-for-f2py.patch
     - fix-add-missing-commas-for-fortran-runtime.patch
     - use-importlib-in-tests.patch
+    - resolve-nose-test-failures.patch
 
 build:
   number: ${{ build_number }}
