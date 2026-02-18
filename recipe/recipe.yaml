@@ -48,7 +48,6 @@ requirements:
     - python
     - setuptools
     - meson-python  # required for fortran
-    - pip
     - hdf5
     - numpy
     - pytables
