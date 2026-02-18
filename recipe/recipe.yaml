@@ -24,7 +24,7 @@ source:
 
 build:
   number: 1
-  string: ${{ moab_prefix }}_${{ openmc_prefix }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build }}
+  string: ${{ enable_moab }}_${{ enable_openmc }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build }}
   skip:
     - win
     - osx
