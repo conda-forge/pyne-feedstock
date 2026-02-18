@@ -14,6 +14,7 @@ source:
     - use-importlib.patch
     - use-setuptools._distutils.patch
     - use-policy_max-in-cmake_minimum_required.patch
+    - use-python3-cmake-variables.patch
 
 build:
   number: 1
