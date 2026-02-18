@@ -24,6 +24,7 @@ source:
     - use-setuptools-for-setup_sub.py.patch
 
 build:
+  number: ${{ build_number }}
   string: ${{ enable_moab }}_${{ enable_openmc }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
   skip:
     - win
