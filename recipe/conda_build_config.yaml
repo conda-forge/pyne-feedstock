@@ -5,3 +5,7 @@ enable_moab:
 enable_openmc:
     - noopenmc
     - openmc
+
+enable_dagmc:
+ - nodagmc
+ - dagmc
