@@ -17,5 +17,4 @@ ${PYTHON} setup.py install \
 
 # Create data library
 cd build
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${PREFIX}/lib"
 ${PYTHON} ${PREFIX}/bin/nuc_data_make

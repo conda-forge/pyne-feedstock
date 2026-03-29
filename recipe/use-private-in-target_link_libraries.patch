@@ -1,0 +1,132 @@
+From aef77eface559a048e7a37d81d117e68c6b1aed6 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Tue, 17 Feb 2026 21:19:38 -0700
+Subject: [PATCH] fix: Use PRIVATE keyword in all target_link_libraries calls
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+CMake 4.x strictly enforces that all target_link_libraries() calls on
+a given target must use either the plain signature or the keyword
+signature (PRIVATE/PUBLIC/INTERFACE) — never both on the same target.
+
+The previous patch replaced python_add_module() with
+Python3_add_library(... MODULE ...). Internally, Python3_add_library
+calls target_link_libraries with the keyword signature via
+FindPython/Support.cmake to link Python3::Module. This means every
+Cython module target (ace, bins, data, ..., models, cram, etc.) already
+has a keyword-signature call registered against it by CMake itself.
+
+Any subsequent plain target_link_libraries(target lib) call on those
+same targets then triggers:
+
+  CMake Error: The keyword signature for target_link_libraries has
+  already been used with the target "ace". All uses of
+  target_link_libraries with a target must be either all-keyword or
+  all-plain.
+
+Fix: add PRIVATE to every remaining target_link_libraries call across
+the four affected files. PRIVATE is correct here because the pyne
+library is an implementation detail of each Cython extension module and
+does not need to be re-exported to consumers of those modules.
+
+Additionally, the multiple chained plain target_link_libraries(pyne ...)
+calls in src/CMakeLists.txt are consolidated into a single keyword-form
+call via an accumulated list variable, eliminating the same future risk
+for the pyne library target itself.
+---
+ cmake/UseCython.cmake  |  2 +-
+ pyne/CMakeLists.txt    |  6 +++---
+ pyne/xs/CMakeLists.txt |  2 +-
+ src/CMakeLists.txt     | 17 +++++++++--------
+ 4 files changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/cmake/UseCython.cmake b/cmake/UseCython.cmake
+index 483877ea..86335001 100644
+--- a/cmake/UseCython.cmake
++++ b/cmake/UseCython.cmake
+@@ -312,5 +312,5 @@ function( cython_add_standalone_executable _name )
+   set( CYTHON_FLAGS ${CYTHON_FLAGS} --embed )
+   compile_pyx( "${main_module_we}_static" generated_file ${main_module} )
+   add_executable( ${_name} ${generated_file} ${pyx_module_sources} ${other_module_sources} )
+-  target_link_libraries( ${_name} ${PYTHON_LIBRARIES} ${pyx_module_libs} )
++  target_link_libraries( ${_name} PRIVATE ${PYTHON_LIBRARIES} ${pyx_module_libs} )
+ endfunction()
+diff --git a/pyne/CMakeLists.txt b/pyne/CMakeLists.txt
+index a2788909..27670f9a 100644
+--- a/pyne/CMakeLists.txt
++++ b/pyne/CMakeLists.txt
+@@ -37,7 +37,7 @@ foreach(cymod ${PYNE_CYTHON_MODULES})
+   set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/${cymod}.pyx"
+                               PROPERTIES CYTHON_IS_CXX TRUE)
+   cython_add_module(${cymod} ${cymod}.pyx)
+-  target_link_libraries(${cymod} pyne)
++  target_link_libraries(${cymod} PRIVATE pyne)
+   install(TARGETS ${cymod} LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne")
+ endforeach()
+ 
+@@ -45,7 +45,7 @@ endforeach()
+ # Cram is actually a C, not C++ file
+ #
+ cython_add_module(cram cram.pyx)
+-target_link_libraries(cram pyne)
++target_link_libraries(cram PRIVATE pyne)
+ install(TARGETS cram LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne")
+ 
+ #
+@@ -55,7 +55,7 @@ if(DAGMC_FOUND)
+   set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/dagmc.pyx"
+                               PROPERTIES CYTHON_IS_CXX TRUE)
+   cython_add_module(_dagmc dagmc.pyx "${PROJECT_SOURCE_DIR}/src/dagmc_bridge.cpp")
+-  target_link_libraries(_dagmc dagmc MOAB pyne)
++  target_link_libraries(_dagmc PRIVATE dagmc MOAB pyne)
+   set_target_properties(_dagmc PROPERTIES OUTPUT_NAME dagmc)
+   install(TARGETS _dagmc LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne")
+ endif(DAGMC_FOUND)
+diff --git a/pyne/xs/CMakeLists.txt b/pyne/xs/CMakeLists.txt
+index 230f6afa..885af043 100644
+--- a/pyne/xs/CMakeLists.txt
++++ b/pyne/xs/CMakeLists.txt
+@@ -7,5 +7,5 @@ message("-- Include paths for ${CMAKE_CURRENT_SOURCE_DIR}: ${inc_dirs}")
+ set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/xs/models.pyx"
+                             PROPERTIES CYTHON_IS_CXX TRUE)
+ cython_add_module(models models.pyx)
+-target_link_libraries(models pyne)
++target_link_libraries(models PRIVATE pyne)
+ install(TARGETS models LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne/xs")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2c151e9d..93b1fe9b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -87,19 +87,20 @@ fast_compile(cram.c
+ # compile and link library
+ add_library(pyne ${PYNE_SRCS})
+ if("${LIBS_HDF5}" STREQUAL "")
+-  target_link_libraries(pyne hdf5)
++  set(_PYNE_LINK_LIBS hdf5)
+ else()
+-  target_link_libraries(pyne ${LIBS_HDF5})
++  set(_PYNE_LINK_LIBS ${LIBS_HDF5})
+ endif()
+ IF(BUILD_SPATIAL_SOLVER)
+-    target_link_libraries(pyne ${LIBS_HDF5} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+-ENDIF(BUILD_SPATIAL_SOLVER)
++    list(APPEND _PYNE_LINK_LIBS ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
++ENDIF()
+ if(MOAB_FOUND)
+-    target_link_libraries(pyne MOAB)
+-endif(MOAB_FOUND)
++    list(APPEND _PYNE_LINK_LIBS MOAB)
++endif()
+ if(DAGMC_FOUND)
+-    target_link_libraries(pyne dagmc MOAB)
+-endif(DAGMC_FOUND)
++    list(APPEND _PYNE_LINK_LIBS dagmc MOAB)
++endif()
++target_link_libraries(pyne PRIVATE ${_PYNE_LINK_LIBS})
+ 
+ add_executable(alphad ${PROJECT_SOURCE_DIR}/src/ensdf_processing/ALPHAD/alphad.f
+                       ${PROJECT_SOURCE_DIR}/src/ensdf_processing/nsdflib95.f)
+-- 
+2.53.0
+

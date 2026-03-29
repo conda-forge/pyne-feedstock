@@ -1,0 +1,159 @@
+schema_version: 1
+
+context:
+  version: "0.7.5"
+  build_number: 1
+
+package:
+  name: pyne
+  version: ${{ version }}
+
+source:
+  url: https://github.com/pyne/pyne/archive/${{ version }}.tar.gz
+  sha256: 80143d5e232b89ffd89121363c0e1e615acc28c26f5d7682521eb9baf98311c4
+  patches:
+    - use-importlib.patch
+    - use-setuptools._distutils.patch
+    - use-policy_max-in-cmake_minimum_required.patch
+    - use-python3-cmake-variables.patch
+    - use-private-in-target_link_libraries.patch
+    - ignore-unknown-arguments-passed-to-setup.patch
+    - use-fallow-argument-mismatch-for-fortran.patch
+    - update-to-cython3.patch
+    - fix-cython-cppclass-constructor-resolution.patch
+    - use-setuptools-for-setup_sub.py.patch
+    - ensure-meson-backend-for-f2py.patch
+    - fix-add-missing-commas-for-fortran-runtime.patch
+    - use-importlib-in-tests.patch
+    - resolve-nose-test-failures.patch
+
+build:
+  number: ${{ build_number }}
+  string: ${{ enable_moab }}_${{ enable_openmc }}py${{ python | version_to_buildstring }}h${{ hash }}_${{ build_number }}
+  skip:
+    # Global pinning of 'hdf5 1.14.6.*' for 'python 3.10.*' makes pytables
+    # solve impossible.
+    - match(python, "<3.11")
+    - win
+    - osx
+  prefix_detection:
+    ignore_binary_files: true
+
+requirements:
+  build:
+    - ${{ stdlib("c") }}
+    - ${{ compiler("cxx") }}
+    - ${{ compiler("fortran") }}
+    - cmake
+    - make
+    - pkg-config
+  host:
+    - python
+    - setuptools
+    - meson-python  # required for f2py in pyne/CMakeLists.txt
+    - hdf5
+    - numpy
+    - pytables
+    - cython
+    - if: enable_moab == "moab"
+      then: moab
+  run:
+    - python
+    - hdf5
+    - pytables
+    - numpy
+    - scipy
+    - future
+    - jinja2
+    - if: enable_moab == "moab"
+      then: moab
+    - if: enable_openmc == "openmc"
+      then: openmc
+
+tests:
+  - package_contents:
+      bin:
+        - aceviewer
+        - activation_responses.py
+        - expand_tags.py
+        - gtcadis.py
+        - meshtal_to_mesh
+        - nuc_data_make
+        - ptrac_to_hdf5
+        - r2s.py
+        - ssw_combine.py
+        - tape9
+      include:
+        - pyne/_atomic_data.h
+        - pyne/_decay.h
+        - pyne/atomic_data.h
+        - pyne/cram.h
+        - pyne/cram.hpp
+        - pyne/dagmc_bridge.h
+        - pyne/data.h
+        - pyne/decay.h
+        - pyne/enrichment.h
+        - pyne/enrichment_cascade.h
+        - pyne/enrichment_symbolic.h
+        - pyne/extra_types.h
+        - pyne/h5wrap.h
+        - pyne/json-forwards.h
+        - pyne/json.h
+        - pyne/jsoncustomwriter.h
+        - pyne/material.h
+        - pyne/material_library.h
+        - pyne/measure.h
+        - pyne/nucname.h
+        - pyne/particle.h
+        - pyne/pyne.h
+        - pyne/rxname.h
+        - pyne/source.h
+        - pyne/source_sampling.h
+        - pyne/tally.h
+        - pyne/transmuters.h
+        - pyne/utils.h
+      lib:
+        - pyne
+      site_packages:
+        - pyne
+        - pyne.apigen
+        - pyne.cli
+        - pyne.dbgen
+        - pyne.fortranformat
+        - pyne.gui
+        - pyne/nuc_data.h5
+
+  - python:
+      imports:
+        - pyne
+      pip_check: true
+      python_version: ${{ python }}
+
+  - files:
+      source:
+        - tests
+    requirements:
+      run:
+        - nose
+    script:
+      - python -c "from pyne.pyne_config import pyne_conf; print(pyne_conf.NUC_DATA_PATH)"
+      - cd tests
+      # It takes too long to download data files for CI
+      - rm -f test_endf.py xs/test_data_source.py test_fortran.py test_data_nofile.py test_materials_library.py
+      - nosetests --nocapture
+
+about:
+  license: BSD-3-Clause
+  license_file: license.txt
+  summary: The nuclear engineering toolkit
+  homepage: https://pyne.io/
+  repository: https://github.com/pyne/pyne
+  documentation: https://pyne.io/
+
+extra:
+  recipe-maintainers:
+    - scopatz
+    - gonuke
+    - bam241
+    - kkiesling
+    - opotowsky

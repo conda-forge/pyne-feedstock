@@ -1,0 +1,669 @@
+From 5469738ca5cdb2c37e8c71a7228d8823cf511b72 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Tue, 17 Feb 2026 23:43:50 -0700
+Subject: [PATCH] fix: Migrate Cython 2 patterns to Cython 3 compatibility
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Cython 3.x removed or changed several behaviors from Cython 2:
+
+1. cpdef for module-level variables (cram.pyx):
+   cpdef cannot declare module-level variables in Cython 3. Changed
+   `cpdef dict C_IJ` and `cpdef list C_NUCS` to `cdef`, since the
+   Python-accessible names IJ and NUCS are assigned separately.
+
+2. Python 2 `long` builtin removed (rxname.pyx, particle.pyx,
+   nucname.pyx, stlcontainers.pyx):
+   In Python 3, `long` is not a builtin type — `int` covers all
+   integer sizes. Replaced `long(x)` casts with direct variable or
+   `int(x)`, and removed all `isinstance(x, long)` branches that are
+   unreachable in Python 3 (int already handles all integers).
+
+3. C++ reference type assignment (cpp_material.pxd, enrichment.pyx,
+   material_library.pyx):
+   Cython 3 strictly distinguishes `T &` (reference) from `T` (value).
+   Assigning `Material *` dereference (returning `Material &`) to a
+   `Material` value field now requires an explicit copy constructor
+   call. Added `Material(Material &)` copy constructor declaration to
+   cpp_material.pxd, and updated enrichment.pyx and material_library.pyx
+   to call `Material(ptr[0])` explicitly for the copy.
+---
+ pyne/cpp_material.pxd     |  1 +
+ pyne/cram.pyx             |  4 +--
+ pyne/enrichment.pyx       |  6 ++---
+ pyne/material_library.pyx |  2 +-
+ pyne/nucname.pyx          | 42 +++++++++++++++---------------
+ pyne/particle.pyx         | 18 ++++++-------
+ pyne/rxname.pyx           | 18 +++----------
+ pyne/stlcontainers.pyx    | 54 +++++++++++++++++++--------------------
+ 8 files changed, 68 insertions(+), 77 deletions(-)
+
+diff --git a/pyne/cpp_material.pxd b/pyne/cpp_material.pxd
+index 6d7fa22a..c0f398c9 100644
+--- a/pyne/cpp_material.pxd
++++ b/pyne/cpp_material.pxd
+@@ -17,6 +17,7 @@ cdef extern from "material.h" namespace "pyne":
+     cdef cppclass Material:
+         # Constuctors
+         Material()
++        Material(Material &) except +
+         Material(map[int, double]) except +
+         Material(map[int, double], double) except +
+         Material(map[int, double], double, double) except +
+diff --git a/pyne/cram.pyx b/pyne/cram.pyx
+index aaf2270f..0b6ead88 100644
+--- a/pyne/cram.pyx
++++ b/pyne/cram.pyx
+@@ -14,11 +14,11 @@ np.import_ufunc()
+ cdef int i, j, idx
+ N = c_cram.pyne_cram_transmute_info.n
+ NNZ = c_cram.pyne_cram_transmute_info.nnz
+-cpdef dict C_IJ = {}
++cdef dict C_IJ = {}
+ for idx in range(c_cram.pyne_cram_transmute_info.nnz):
+     C_IJ[c_cram.pyne_cram_transmute_info.i[idx], c_cram.pyne_cram_transmute_info.j[idx]] = idx
+ IJ = C_IJ
+-cpdef list C_NUCS = []
++cdef list C_NUCS = []
+ for idx in range(c_cram.pyne_cram_transmute_info.n):
+     b = c_cram.pyne_cram_transmute_info.nucs[idx]
+     s = b.decode()
+diff --git a/pyne/enrichment.pyx b/pyne/enrichment.pyx
+index f1e88ff0..686afc5b 100644
+--- a/pyne/enrichment.pyx
++++ b/pyne/enrichment.pyx
+@@ -180,7 +180,7 @@ cdef class Cascade:
+         def __set__(self, value):
+             cdef pyne.material._Material value_proxy
+             value_proxy = pyne.material.Material(value, free_mat=not isinstance(value, pyne.material._Material))
+-            (<cpp_enrichment.Cascade *> self._inst).mat_feed = value_proxy.mat_pointer[0]
++            (<cpp_enrichment.Cascade *> self._inst).mat_feed = pyne.cpp_material.Material(value_proxy.mat_pointer[0])
+             self._mat_feed = None
+ 
+     property mat_prod:
+@@ -197,7 +197,7 @@ cdef class Cascade:
+         def __set__(self, value):
+             cdef pyne.material._Material value_proxy
+             value_proxy = pyne.material.Material(value, free_mat=not isinstance(value, pyne.material._Material))
+-            (<cpp_enrichment.Cascade *> self._inst).mat_prod = value_proxy.mat_pointer[0]
++            (<cpp_enrichment.Cascade *> self._inst).mat_prod = pyne.cpp_material.Material(value_proxy.mat_pointer[0])
+             self._mat_prod = None
+ 
+     property mat_tail:
+@@ -214,7 +214,7 @@ cdef class Cascade:
+         def __set__(self, value):
+             cdef pyne.material._Material value_proxy
+             value_proxy = pyne.material.Material(value, free_mat=not isinstance(value, pyne.material._Material))
+-            (<cpp_enrichment.Cascade *> self._inst).mat_tail = value_proxy.mat_pointer[0]
++            (<cpp_enrichment.Cascade *> self._inst).mat_tail = pyne.cpp_material.Material(value_proxy.mat_pointer[0])
+             self._mat_tail = None
+ 
+     property l_t_per_feed:
+diff --git a/pyne/material_library.pyx b/pyne/material_library.pyx
+index 856a125d..e1317ee4 100644
+--- a/pyne/material_library.pyx
++++ b/pyne/material_library.pyx
+@@ -233,7 +233,7 @@ cdef class _MaterialLibrary:
+         cdef cpp_pair[std_string, cpp_material.Material] item
+         value_proxy = material.Material(
+             value, free_mat=not isinstance(value, material._Material))
+-        self._inst.add_material(ensure_material_key(key), deref(( < material._Material > value_proxy).mat_pointer))
++        self._inst.add_material(ensure_material_key(key), cpp_material.Material(deref(( < material._Material > value_proxy).mat_pointer)))
+ 
+     def __getitem__(self, key):
+         cdef shared_ptr[cpp_material.Material] c_mat
+diff --git a/pyne/nucname.pyx b/pyne/nucname.pyx
+index f7dcbffe..082da898 100644
+--- a/pyne/nucname.pyx
++++ b/pyne/nucname.pyx
+@@ -114,7 +114,7 @@ def isnuclide(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         flag = cpp_nucname.isnuclide(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         flag = cpp_nucname.isnuclide(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -137,7 +137,7 @@ def iselement(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         flag = cpp_nucname.iselement(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         flag = cpp_nucname.iselement(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -186,7 +186,7 @@ def id(nuc):
+     if isinstance(nuc, basestring):
+         nuc = nuc.encode()
+         newnuc = cpp_nucname.id(<char *> nuc)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -237,7 +237,7 @@ def znum(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         z = cpp_nucname.znum(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         z = cpp_nucname.znum(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -261,7 +261,7 @@ def anum(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         a = cpp_nucname.anum(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         a = cpp_nucname.anum(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -285,7 +285,7 @@ def snum(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         s = cpp_nucname.snum(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         s = cpp_nucname.snum(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -309,7 +309,7 @@ def zzaaam(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.zzaaam(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.zzaaam(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -334,7 +334,7 @@ def zzaaam_to_id(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.zzaaam_to_id(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.zzaaam_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -358,7 +358,7 @@ def zzzaaa(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.zzzaaa(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.zzzaaa(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -382,7 +382,7 @@ def zzzaaa_to_id(nuc):
+     """
+     if isinstance(nuc, basestring):
+         newnuc = cpp_nucname.zzzaaa_to_id(<char *> nuc)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.zzzaaa_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -439,7 +439,7 @@ def mcnp_to_id(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.mcnp_to_id(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.mcnp_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -544,7 +544,7 @@ def zzllaaam(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.zzllaaam(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.zzllaaam(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -620,7 +620,7 @@ def serpent_to_id(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.serpent_to_id(<char *> nuc_bytes)
+-    #elif isinstance(nuc, int) or isinstance(nuc, long):
++    #elif isinstance(nuc, int):
+     #    newnuc = cpp_nucname.serpent_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -672,7 +672,7 @@ def nist_to_id(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.nist_to_id(<char *> nuc_bytes)
+-    #elif isinstance(nuc, int) or isinstance(nuc, long):
++    #elif isinstance(nuc, int):
+     #    newnuc = cpp_nucname.nist_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -720,7 +720,7 @@ def cinder_to_id(nuc):
+     """
+     if isinstance(nuc, basestring):
+         newnuc = cpp_nucname.cinder_to_id(<char *> nuc)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.cinder_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -772,7 +772,7 @@ def alara_to_id(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.alara_to_id(<char *> nuc_bytes)
+-    #elif isinstance(nuc, int) or isinstance(nuc, long):
++    #elif isinstance(nuc, int):
+     #    newnuc = cpp_nucname.alara_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -796,7 +796,7 @@ def sza(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.sza(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.sza(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -821,7 +821,7 @@ def sza_to_id(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.sza_to_id(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.sza_to_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -845,7 +845,7 @@ def groundstate(nuc):
+     if isinstance(nuc, basestring):
+         nuc_bytes = nuc.encode()
+         newnuc = cpp_nucname.groundstate(<char *> nuc_bytes)
+-    elif isinstance(nuc, int) or isinstance(nuc, long):
++    elif isinstance(nuc, int):
+         newnuc = cpp_nucname.groundstate(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+@@ -868,7 +868,7 @@ def state_id_to_id(state):
+         found, None is returned.
+ 
+     """
+-    if isinstance(state, int) or isinstance(state, long):
++    if isinstance(state, int):
+         newnuc = cpp_nucname.state_id_to_id(<int> state)
+     else:
+         raise NucTypeError(state)
+@@ -893,7 +893,7 @@ def id_to_state_id(nuc):
+         found, None is returned.
+ 
+     """
+-    if isinstance(nuc, int) or isinstance(nuc, long):
++    if isinstance(nuc, int):
+         newnuc = cpp_nucname.id_to_state_id(<int> nuc)
+     else:
+         raise NucTypeError(nuc)
+diff --git a/pyne/particle.pyx b/pyne/particle.pyx
+index b0877453..65591b70 100644
+--- a/pyne/particle.pyx
++++ b/pyne/particle.pyx
+@@ -128,7 +128,7 @@ def name(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.name(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.name(<int> long(x))
++        cn = cpp_particle.name(<int> x)
+ 
+     n = bytes(<char *> cn.c_str()).decode()
+     
+@@ -151,7 +151,7 @@ def mcnp(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.mcnp(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.mcnp(<int> long(x))
++        cn = cpp_particle.mcnp(<int> x)
+ 
+     n = bytes(<char *> cn.c_str()).decode()
+     
+@@ -175,7 +175,7 @@ def mcnp6(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.mcnp6(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.mcnp6(<int> long(x))
++        cn = cpp_particle.mcnp6(<int> x)
+ 
+     n = bytes(<char *> cn.c_str()).decode()
+     
+@@ -199,7 +199,7 @@ def fluka(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.fluka(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.fluka(<int> long(x))
++        cn = cpp_particle.fluka(<int> x)
+ 
+     n = bytes(<char *> cn.c_str()).decode()
+     
+@@ -222,7 +222,7 @@ def geant4(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.geant4(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.geant4(<int> long(x))
++        cn = cpp_particle.geant4(<int> x)
+ 
+     n = bytes(<char *> cn.c_str()).decode()
+     
+@@ -247,7 +247,7 @@ def describe(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.describe(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.describe(<int> long(x))
++        cn = cpp_particle.describe(<int> x)
+ 
+     n = bytes(<char *> cn.c_str()).decode()
+     
+@@ -271,7 +271,7 @@ def id(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.id(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.id(<int> long(x))
++        cn = cpp_particle.id(<int> x)
+ 
+     n = cn
+     
+@@ -295,7 +295,7 @@ def is_valid(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.is_valid(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.is_valid(<int> long(x))
++        cn = cpp_particle.is_valid(<int> x)
+ 
+     n = cn
+     
+@@ -319,7 +319,7 @@ def is_heavy_ion(x):
+         x_bytes = x.encode()
+         cn = cpp_particle.is_heavy_ion(std_string(<char *> x_bytes))
+     elif isinstance(x, int):
+-        cn = cpp_particle.is_heavy_ion(<int> long(x))
++        cn = cpp_particle.is_heavy_ion(<int> x)
+ 
+     n = cn
+     
+diff --git a/pyne/rxname.pyx b/pyne/rxname.pyx
+index f16d160f..7779cfdd 100644
+--- a/pyne/rxname.pyx
++++ b/pyne/rxname.pyx
+@@ -237,8 +237,6 @@ def name(x, y=None, z="n"):
+             x_bytes = x.encode()
+             cn = cpp_rxname.name(std_string(<char *> x_bytes))
+         elif isinstance(x, int):
+-            cn = cpp_rxname.name(<extra_types.uint32> long(x))
+-        elif isinstance(x, long):
+             cn = cpp_rxname.name(<extra_types.uint32> x)
+     else:
+         if isinstance(x, basestring):
+@@ -284,8 +282,6 @@ def id(x, y=None, z="n"):
+             x_bytes = x.encode()
+             rxid = cpp_rxname.id(std_string(<char *> x_bytes))
+         elif isinstance(x, int):
+-            rxid = cpp_rxname.id(<extra_types.uint32> long(x))
+-        elif isinstance(x, long):
+             rxid = cpp_rxname.id(<extra_types.uint32> x)
+     else:
+         if isinstance(x, basestring):
+@@ -328,8 +324,6 @@ def mt(x, y=None, z="n"):
+             x_bytes = x.encode()
+             mtnum = cpp_rxname.mt(std_string(<char *> x_bytes))
+         elif isinstance(x, int):
+-            mtnum = cpp_rxname.mt(<extra_types.uint32> long(x))
+-        elif isinstance(x, long):
+             mtnum = cpp_rxname.mt(<extra_types.uint32> x)
+     else:
+         if isinstance(x, basestring):
+@@ -373,8 +367,6 @@ def label(x, y=None, z="n"):
+             x_bytes = x.encode()
+             clab = cpp_rxname.label(std_string(<char *> x_bytes))
+         elif isinstance(x, int):
+-            clab = cpp_rxname.label(<extra_types.uint32> long(x))
+-        elif isinstance(x, long):
+             clab = cpp_rxname.label(<extra_types.uint32> x)
+     else:
+         if isinstance(x, basestring):
+@@ -419,8 +411,6 @@ def doc(x, y=None, z="n"):
+             x_bytes = x.encode()
+             cd = cpp_rxname.doc(std_string(<char *> x_bytes))
+         elif isinstance(x, int):
+-            cd = cpp_rxname.doc(<extra_types.uint32> long(x))
+-        elif isinstance(x, long):
+             cd = cpp_rxname.doc(<extra_types.uint32> x)
+     else:
+         if isinstance(x, basestring):
+@@ -478,9 +468,9 @@ def child(nuc, rx, z="n"):
+     elif nuc_is_str and not rx_is_str:
+         nuc_bytes = nuc.encode()
+         to_nuc = cpp_rxname.child(std_string(<char *> nuc_bytes),
+-                                  <extra_types.uint32> long(rx), ptype)
++                                  <extra_types.uint32> int(rx), ptype)
+     elif not nuc_is_str and not rx_is_str:
+-        to_nuc = cpp_rxname.child(<int> nuc, <extra_types.uint32> long(rx), ptype)
++        to_nuc = cpp_rxname.child(<int> nuc, <extra_types.uint32> int(rx), ptype)
+     return int(to_nuc)
+ 
+ 
+@@ -523,8 +513,8 @@ def parent(nuc, rx, z="n"):
+     elif nuc_is_str and not rx_is_str:
+         nuc_bytes = nuc.encode()
+         from_nuc = cpp_rxname.parent(std_string(<char *> nuc_bytes),
+-                                    <extra_types.uint32> long(rx), ptype)
++                                    <extra_types.uint32> int(rx), ptype)
+     elif not nuc_is_str and not rx_is_str:
+-        from_nuc = cpp_rxname.parent(<int> nuc, <extra_types.uint32> long(rx), ptype)
++        from_nuc = cpp_rxname.parent(<int> nuc, <extra_types.uint32> int(rx), ptype)
+     return int(from_nuc)
+ 
+diff --git a/pyne/stlcontainers.pyx b/pyne/stlcontainers.pyx
+index 930a5a92..eab5cedc 100644
+--- a/pyne/stlcontainers.pyx
++++ b/pyne/stlcontainers.pyx
+@@ -812,14 +812,14 @@ cdef class _MapStrUInt:
+             for key, value in new_map.items():
+                 key_bytes = key.encode()
+ 
+-                item = pair[std_string, extra_types.uint32](std_string(<char *> key_bytes), <extra_types.uint32> long(value))
++                item = pair[std_string, extra_types.uint32](std_string(<char *> key_bytes), <extra_types.uint32> int(value))
+                 self.map_ptr.insert(item)
+         elif hasattr(new_map, '__len__'):
+             self.map_ptr = new cpp_map[std_string, extra_types.uint32]()
+             for key, value in new_map:
+                 key_bytes = key.encode()
+ 
+-                item = pair[std_string, extra_types.uint32](std_string(<char *> key_bytes), <extra_types.uint32> long(value))
++                item = pair[std_string, extra_types.uint32](std_string(<char *> key_bytes), <extra_types.uint32> int(value))
+                 self.map_ptr.insert(item)
+         elif bool(new_map):
+             self.map_ptr = new cpp_map[std_string, extra_types.uint32]()
+@@ -875,7 +875,7 @@ cdef class _MapStrUInt:
+         cdef pair[std_string, extra_types.uint32] item
+         key_bytes = key.encode()
+ 
+-        item = pair[std_string, extra_types.uint32](std_string(<char *> key_bytes), <extra_types.uint32> long(value))
++        item = pair[std_string, extra_types.uint32](std_string(<char *> key_bytes), <extra_types.uint32> int(value))
+         if 0 < self.map_ptr.count(std_string(<char *> key_bytes)):
+             self.map_ptr.erase(std_string(<char *> key_bytes))
+         self.map_ptr.insert(item)
+@@ -963,14 +963,14 @@ cdef class _MapUIntStr:
+             for key, value in new_map.items():
+ 
+                 value_bytes = value.encode()
+-                item = pair[extra_types.uint32, std_string](<extra_types.uint32> long(key), std_string(<char *> value_bytes))
++                item = pair[extra_types.uint32, std_string](<extra_types.uint32> int(key), std_string(<char *> value_bytes))
+                 self.map_ptr.insert(item)
+         elif hasattr(new_map, '__len__'):
+             self.map_ptr = new cpp_map[extra_types.uint32, std_string]()
+             for key, value in new_map:
+ 
+                 value_bytes = value.encode()
+-                item = pair[extra_types.uint32, std_string](<extra_types.uint32> long(key), std_string(<char *> value_bytes))
++                item = pair[extra_types.uint32, std_string](<extra_types.uint32> int(key), std_string(<char *> value_bytes))
+                 self.map_ptr.insert(item)
+         elif bool(new_map):
+             self.map_ptr = new cpp_map[extra_types.uint32, std_string]()
+@@ -988,7 +988,7 @@ cdef class _MapUIntStr:
+         if not isinstance(key, int):
+             return False
+ 
+-        k = <extra_types.uint32> long(key)
++        k = <extra_types.uint32> int(key)
+ 
+         if 0 < self.map_ptr.count(k):
+             return True
+@@ -1011,7 +1011,7 @@ cdef class _MapUIntStr:
+         if not isinstance(key, int):
+             raise TypeError("Only unsigned integer keys are valid.")
+ 
+-        k = <extra_types.uint32> long(key)
++        k = <extra_types.uint32> int(key)
+ 
+         if 0 < self.map_ptr.count(k):
+             v = deref(self.map_ptr)[k]
+@@ -1026,9 +1026,9 @@ cdef class _MapUIntStr:
+         cdef pair[extra_types.uint32, std_string] item
+ 
+         value_bytes = value.encode()
+-        item = pair[extra_types.uint32, std_string](<extra_types.uint32> long(key), std_string(<char *> value_bytes))
+-        if 0 < self.map_ptr.count(<extra_types.uint32> long(key)):
+-            self.map_ptr.erase(<extra_types.uint32> long(key))
++        item = pair[extra_types.uint32, std_string](<extra_types.uint32> int(key), std_string(<char *> value_bytes))
++        if 0 < self.map_ptr.count(<extra_types.uint32> int(key)):
++            self.map_ptr.erase(<extra_types.uint32> int(key))
+         self.map_ptr.insert(item)
+ 
+     def __delitem__(self, key):
+@@ -1036,7 +1036,7 @@ cdef class _MapUIntStr:
+ 
+         if key in self:
+ 
+-            k = <extra_types.uint32> long(key)
++            k = <extra_types.uint32> int(key)
+             self.map_ptr.erase(k)
+ 
+ 
+@@ -1265,14 +1265,14 @@ cdef class _MapUIntUInt:
+             for key, value in new_map.items():
+ 
+ 
+-                item = pair[extra_types.uint32, extra_types.uint32](<extra_types.uint32> long(key), <extra_types.uint32> long(value))
++                item = pair[extra_types.uint32, extra_types.uint32](<extra_types.uint32> int(key), <extra_types.uint32> int(value))
+                 self.map_ptr.insert(item)
+         elif hasattr(new_map, '__len__'):
+             self.map_ptr = new cpp_map[extra_types.uint32, extra_types.uint32]()
+             for key, value in new_map:
+ 
+ 
+-                item = pair[extra_types.uint32, extra_types.uint32](<extra_types.uint32> long(key), <extra_types.uint32> long(value))
++                item = pair[extra_types.uint32, extra_types.uint32](<extra_types.uint32> int(key), <extra_types.uint32> int(value))
+                 self.map_ptr.insert(item)
+         elif bool(new_map):
+             self.map_ptr = new cpp_map[extra_types.uint32, extra_types.uint32]()
+@@ -1290,7 +1290,7 @@ cdef class _MapUIntUInt:
+         if not isinstance(key, int):
+             return False
+ 
+-        k = <extra_types.uint32> long(key)
++        k = <extra_types.uint32> int(key)
+ 
+         if 0 < self.map_ptr.count(k):
+             return True
+@@ -1313,7 +1313,7 @@ cdef class _MapUIntUInt:
+         if not isinstance(key, int):
+             raise TypeError("Only unsigned integer keys are valid.")
+ 
+-        k = <extra_types.uint32> long(key)
++        k = <extra_types.uint32> int(key)
+ 
+         if 0 < self.map_ptr.count(k):
+             v = deref(self.map_ptr)[k]
+@@ -1328,9 +1328,9 @@ cdef class _MapUIntUInt:
+         cdef pair[extra_types.uint32, extra_types.uint32] item
+ 
+ 
+-        item = pair[extra_types.uint32, extra_types.uint32](<extra_types.uint32> long(key), <extra_types.uint32> long(value))
+-        if 0 < self.map_ptr.count(<extra_types.uint32> long(key)):
+-            self.map_ptr.erase(<extra_types.uint32> long(key))
++        item = pair[extra_types.uint32, extra_types.uint32](<extra_types.uint32> int(key), <extra_types.uint32> int(value))
++        if 0 < self.map_ptr.count(<extra_types.uint32> int(key)):
++            self.map_ptr.erase(<extra_types.uint32> int(key))
+         self.map_ptr.insert(item)
+ 
+     def __delitem__(self, key):
+@@ -1338,7 +1338,7 @@ cdef class _MapUIntUInt:
+ 
+         if key in self:
+ 
+-            k = <extra_types.uint32> long(key)
++            k = <extra_types.uint32> int(key)
+             self.map_ptr.erase(k)
+ 
+ 
+@@ -1869,14 +1869,14 @@ cdef class _MapUIntDouble:
+             for key, value in new_map.items():
+ 
+ 
+-                item = pair[extra_types.uint32, double](<extra_types.uint32> long(key), <double> value)
++                item = pair[extra_types.uint32, double](<extra_types.uint32> int(key), <double> value)
+                 self.map_ptr.insert(item)
+         elif hasattr(new_map, '__len__'):
+             self.map_ptr = new cpp_map[extra_types.uint32, double]()
+             for key, value in new_map:
+ 
+ 
+-                item = pair[extra_types.uint32, double](<extra_types.uint32> long(key), <double> value)
++                item = pair[extra_types.uint32, double](<extra_types.uint32> int(key), <double> value)
+                 self.map_ptr.insert(item)
+         elif bool(new_map):
+             self.map_ptr = new cpp_map[extra_types.uint32, double]()
+@@ -1894,7 +1894,7 @@ cdef class _MapUIntDouble:
+         if not isinstance(key, int):
+             return False
+ 
+-        k = <extra_types.uint32> long(key)
++        k = <extra_types.uint32> int(key)
+ 
+         if 0 < self.map_ptr.count(k):
+             return True
+@@ -1917,7 +1917,7 @@ cdef class _MapUIntDouble:
+         if not isinstance(key, int):
+             raise TypeError("Only unsigned integer keys are valid.")
+ 
+-        k = <extra_types.uint32> long(key)
++        k = <extra_types.uint32> int(key)
+ 
+         if 0 < self.map_ptr.count(k):
+             v = deref(self.map_ptr)[k]
+@@ -1932,9 +1932,9 @@ cdef class _MapUIntDouble:
+         cdef pair[extra_types.uint32, double] item
+ 
+ 
+-        item = pair[extra_types.uint32, double](<extra_types.uint32> long(key), <double> value)
+-        if 0 < self.map_ptr.count(<extra_types.uint32> long(key)):
+-            self.map_ptr.erase(<extra_types.uint32> long(key))
++        item = pair[extra_types.uint32, double](<extra_types.uint32> int(key), <double> value)
++        if 0 < self.map_ptr.count(<extra_types.uint32> int(key)):
++            self.map_ptr.erase(<extra_types.uint32> int(key))
+         self.map_ptr.insert(item)
+ 
+     def __delitem__(self, key):
+@@ -1942,7 +1942,7 @@ cdef class _MapUIntDouble:
+ 
+         if key in self:
+ 
+-            k = <extra_types.uint32> long(key)
++            k = <extra_types.uint32> int(key)
+             self.map_ptr.erase(k)
+ 
+ 
+-- 
+2.53.0
+

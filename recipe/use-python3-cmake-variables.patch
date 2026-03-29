@@ -1,0 +1,177 @@
+From 48921f66a7b0dfce176b1c20041b57ad2a452ccc Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Tue, 17 Feb 2026 19:50:30 -0700
+Subject: [PATCH] Use Python3 CMake variables
+
+for target_link_libraries:
+Python3_add_library(... MODULE ...) internally calls target_link_libraries with the keyword signature (PRIVATE/PUBLIC/INTERFACE) via FindPython/Support.cmake:4448. CMake 4.2 enforces that all target_link_libraries calls on a given target must use the same signature style. The plain target_link_libraries( ${_name} ${PYTHON_LIBRARIES} ) at line 277 mixed the two styles, causing the error for every Cython module target. Adding PRIVATE makes it consistent.
+---
+ CMakeLists.txt         | 26 ++++++++++++++------------
+ cmake/FindCython.cmake |  6 +++---
+ cmake/FindNumpy.cmake  | 12 ++++++------
+ cmake/FindPyne.cmake   |  8 ++++----
+ cmake/UseCython.cmake  | 10 +++++-----
+ 5 files changed, 32 insertions(+), 30 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b6812c02..8b54b91c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -135,20 +135,22 @@ if(WITH_DAGMC)
+ endif()
+ 
+ # Find Python
+-find_package(PythonInterp REQUIRED)
+-find_package(PythonLibs REQUIRED)
+-if(PYTHON_VERSION_MAJOR EQUAL 2)
+-  set(SITE_PACKAGES_CODE
+-      "import site; print site.getusersitepackages().replace(site.USER_BASE, '${CMAKE_INSTALL_PREFIX}', 1)")
+-else(PYTHON_VERSION_MAJOR EQUAL 2)
+-  set(SITE_PACKAGES_CODE
+-      "import site; print(site.getsitepackages(['${CMAKE_INSTALL_PREFIX}'])[0])")
+-endif(PYTHON_VERSION_MAJOR EQUAL 2)
+-execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "${SITE_PACKAGES_CODE}"
++find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++# Compatibility aliases used by cmake/*.cmake helpers and downstream code
++set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
++set(PYTHON_LIBRARIES ${Python3_LIBRARIES})
++set(PYTHON_INCLUDE_DIRS ${Python3_INCLUDE_DIRS})
++set(PYTHON_VERSION_MAJOR ${Python3_VERSION_MAJOR})
++set(PYTHON_VERSION_MINOR ${Python3_VERSION_MINOR})
++set(PYTHON_VERSION_PATCH ${Python3_VERSION_PATCH})
++set(PYTHONLIBS_VERSION_STRING ${Python3_VERSION})
++set(SITE_PACKAGES_CODE
++    "import site; print(site.getsitepackages(['${CMAKE_INSTALL_PREFIX}'])[0])")
++execute_process(COMMAND "${Python3_EXECUTABLE}" -c "${SITE_PACKAGES_CODE}"
+                 OUTPUT_VARIABLE PYTHON_SITE_PACKAGES
+                 OUTPUT_STRIP_TRAILING_WHITESPACE)
+-set(LIBS ${LIBS} ${PYTHON_LIBRARIES})
+-message("-- PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
++set(LIBS ${LIBS} ${Python3_LIBRARIES})
++message("-- PYTHON_EXECUTABLE: ${Python3_EXECUTABLE}")
+ message("-- PYTHON_SITE_PACKAGES: ${PYTHON_SITE_PACKAGES}")
+ 
+ 
+diff --git a/cmake/FindCython.cmake b/cmake/FindCython.cmake
+index a09df033..35a89195 100644
+--- a/cmake/FindCython.cmake
++++ b/cmake/FindCython.cmake
+@@ -28,9 +28,9 @@
+ 
+ # Use the Cython executable that lives next to the Python executable
+ # if it is a local installation.
+-find_package( PythonInterp )
+-if( PYTHONINTERP_FOUND )
+-  get_filename_component( _python_path ${PYTHON_EXECUTABLE} PATH )
++find_package( Python3 COMPONENTS Interpreter )
++if( Python3_Interpreter_FOUND )
++  get_filename_component( _python_path ${Python3_EXECUTABLE} PATH )
+   find_program(CYTHON_EXECUTABLE
+     NAMES cython cython.bat cython3 cython-2.7 cython-3.3 cython-3.4 cython-3.5 cython-3.6 cython-3.7
+     HINTS ENV PATH ${_python_path}
+diff --git a/cmake/FindNumpy.cmake b/cmake/FindNumpy.cmake
+index 136fce28..be4c9886 100644
+--- a/cmake/FindNumpy.cmake
++++ b/cmake/FindNumpy.cmake
+@@ -25,10 +25,10 @@
+ #  License text for the above reference.)
+ 
+ # set NUMPY_INCLUDE_DIR
+-find_package ( PythonInterp )
++find_package ( Python3 COMPONENTS Interpreter )
+ 
+-if ( PYTHONINTERP_FOUND )
+-  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.get_include())"
++if ( Python3_Interpreter_FOUND )
++  execute_process ( COMMAND ${Python3_EXECUTABLE} -c "import numpy; print(numpy.get_include())"
+                     OUTPUT_VARIABLE NUMPY_INCLUDE_DIR
+                     ERROR_QUIET
+                     OUTPUT_STRIP_TRAILING_WHITESPACE )
+@@ -38,8 +38,8 @@ endif ()
+ set ( NUMPY_INCLUDE_DIRS ${NUMPY_INCLUDE_DIR} )
+ 
+ # version
+-if ( PYTHONINTERP_FOUND )
+-  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.__version__)"
++if ( Python3_Interpreter_FOUND )
++  execute_process ( COMMAND ${Python3_EXECUTABLE} -c "import numpy; print(numpy.__version__)"
+                     OUTPUT_VARIABLE NUMPY_VERSION_STRING
+                     OUTPUT_STRIP_TRAILING_WHITESPACE )
+ 
+@@ -49,7 +49,7 @@ if ( PYTHONINTERP_FOUND )
+     string ( REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" NUMPY_PATCH_VERSION ${NUMPY_VERSION_STRING} )
+   endif ()
+ 
+-endif ()
++endif () # Python3_Interpreter_FOUND
+ 
+ # check version
+ set ( _NUMPY_VERSION_MATCH TRUE )
+diff --git a/cmake/FindPyne.cmake b/cmake/FindPyne.cmake
+index 8c825d80..5c79af0e 100644
+--- a/cmake/FindPyne.cmake
++++ b/cmake/FindPyne.cmake
+@@ -19,17 +19,17 @@
+ 
+ # Use the Python interpreter to find the libs.
+ if(Pyne_FIND_REQUIRED)
+-    find_package(PythonInterp REQUIRED)
++    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ else()
+-    find_package(PythonInterp)
++    find_package(Python3 COMPONENTS Interpreter)
+ endif()
+ 
+-if(NOT PYTHONINTERP_FOUND)
++if(NOT Python3_Interpreter_FOUND)
+     set(PYNE_LIBS_FOUND FALSE)
+     return()
+ endif()
+ 
+-execute_process(COMMAND "${PYTHON_EXECUTABLE}" "-c"
++execute_process(COMMAND "${Python3_EXECUTABLE}" "-c"
+     "from pyne import pyne_config as pc; print(pc.prefix); print(pc.lib); print(pc.includes)"
+     RESULT_VARIABLE _PYNE_SUCCESS
+     OUTPUT_VARIABLE _PYNE_VALUES
+diff --git a/cmake/UseCython.cmake b/cmake/UseCython.cmake
+index 46ec804e..483877ea 100644
+--- a/cmake/UseCython.cmake
++++ b/cmake/UseCython.cmake
+@@ -72,7 +72,7 @@ set( CYTHON_FLAGS "" CACHE STRING
+ mark_as_advanced( CYTHON_ANNOTATE CYTHON_NO_DOCSTRINGS CYTHON_FLAGS )
+ 
+ find_package( Cython REQUIRED )
+-find_package( PythonLibs REQUIRED )
++find_package( Python3 REQUIRED COMPONENTS Development )
+ 
+ set( CYTHON_CXX_EXTENSION "cxx" )
+ set( CYTHON_C_EXTENSION "c" )
+@@ -209,9 +209,9 @@ function( compile_pyx _name generated_file )
+       set( cython_debug_arg "--gdb" )
+   endif()
+ 
+-  if( "${PYTHONLIBS_VERSION_STRING}" MATCHES "^2." )
++  if( "${Python3_VERSION}" MATCHES "^2." )
+     set( version_arg "-2" )
+-  elseif( "${PYTHONLIBS_VERSION_STRING}" MATCHES "^3." )
++  elseif( "${Python3_VERSION}" MATCHES "^3." )
+     set( version_arg "-3" )
+   else()
+     set( version_arg )
+@@ -270,11 +270,11 @@ function( cython_add_module _name )
+   endforeach()
+   compile_pyx( ${_name} generated_file ${pyx_module_sources} )
+   include_directories( ${PYTHON_INCLUDE_DIRS} )
+-  python_add_module( ${_name} ${generated_file} ${other_module_sources} )
++  Python3_add_library( ${_name} MODULE ${generated_file} ${other_module_sources} )
+   if( APPLE )
+     set_target_properties( ${_name} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup" )
+   else()
+-    target_link_libraries( ${_name} ${PYTHON_LIBRARIES} )
++    target_link_libraries( ${_name} PRIVATE ${PYTHON_LIBRARIES} )
+   endif()
+ endfunction()
+ 
+-- 
+2.53.0
+

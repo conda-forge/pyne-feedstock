@@ -1,0 +1,86 @@
+From c7aed70e2a085b8cc724a7d4f7028baccde49ab0 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 00:12:53 -0700
+Subject: [PATCH] fix: Fix Cython cppclass constructor resolution and f2py
+ meson backend
+
+Two build failures fixed:
+
+1. enrichment.pyx: Cython 3 cannot resolve copy constructor overloads
+   when the cppclass type is referenced via dotted module namespace
+   (pyne.cpp_material.Material). Add a direct 'from pyne cimport
+   cpp_material' import alongside the existing 'cimport pyne.cpp_material'
+   so that cpp_material.Material(deref(ptr)) resolves correctly. This
+   mirrors the pattern already used in material_library.pyx which compiled
+   successfully.
+
+   fix: resolve Cython 3 Material copy construction
+
+   In Cython 3, accessing mat_pointer through a cimport-typed variable
+   (pyne.material._Material) resolves the pointer type via the relative
+   cimport in material.pxd, which conflicts with the absolute import path
+   (from pyne cimport cpp_material) used in enrichment.pyx. This causes
+   "no suitable method found" when Cython tries to match the copy
+   constructor. Fix by assigning to an explicit cpp_material.Material *
+   local, normalizing the type before the copy constructor call.
+
+2. pyne/CMakeLists.txt: NumPy 2.x changed f2py's default build backend
+   from distutils to meson (requiring the meson tool to be installed).
+   f2py
+   >= 2.x refuses distutils for Python >= 3.12 and falls back to meson.
+   Meson will be provided as a feedstock build dependency instead.
+---
+ pyne/enrichment.pyx | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/pyne/enrichment.pyx b/pyne/enrichment.pyx
+index 686afc5b..b75155dd 100644
+--- a/pyne/enrichment.pyx
++++ b/pyne/enrichment.pyx
+@@ -22,6 +22,7 @@ from pyne cimport nucname
+ from pyne import nucname
+ from pyne cimport stlcontainers as conv
+ cimport pyne.cpp_material
++from pyne cimport cpp_material
+ cimport pyne.material
+ import pyne.material
+ from pyne cimport cpp_enrichment
+@@ -179,8 +180,10 @@ cdef class Cascade:
+     
+         def __set__(self, value):
+             cdef pyne.material._Material value_proxy
++            cdef cpp_material.Material * _mat_ptr
+             value_proxy = pyne.material.Material(value, free_mat=not isinstance(value, pyne.material._Material))
+-            (<cpp_enrichment.Cascade *> self._inst).mat_feed = pyne.cpp_material.Material(value_proxy.mat_pointer[0])
++            _mat_ptr = value_proxy.mat_pointer
++            (<cpp_enrichment.Cascade *> self._inst).mat_feed = cpp_material.Material(deref(_mat_ptr))
+             self._mat_feed = None
+ 
+     property mat_prod:
+@@ -196,8 +199,10 @@ cdef class Cascade:
+     
+         def __set__(self, value):
+             cdef pyne.material._Material value_proxy
++            cdef cpp_material.Material * _mat_ptr
+             value_proxy = pyne.material.Material(value, free_mat=not isinstance(value, pyne.material._Material))
+-            (<cpp_enrichment.Cascade *> self._inst).mat_prod = pyne.cpp_material.Material(value_proxy.mat_pointer[0])
++            _mat_ptr = value_proxy.mat_pointer
++            (<cpp_enrichment.Cascade *> self._inst).mat_prod = cpp_material.Material(deref(_mat_ptr))
+             self._mat_prod = None
+ 
+     property mat_tail:
+@@ -213,8 +218,10 @@ cdef class Cascade:
+     
+         def __set__(self, value):
+             cdef pyne.material._Material value_proxy
++            cdef cpp_material.Material * _mat_ptr
+             value_proxy = pyne.material.Material(value, free_mat=not isinstance(value, pyne.material._Material))
+-            (<cpp_enrichment.Cascade *> self._inst).mat_tail = pyne.cpp_material.Material(value_proxy.mat_pointer[0])
++            _mat_ptr = value_proxy.mat_pointer
++            (<cpp_enrichment.Cascade *> self._inst).mat_tail = cpp_material.Material(deref(_mat_ptr))
+             self._mat_tail = None
+ 
+     property l_t_per_feed:
+-- 
+2.53.0
+
