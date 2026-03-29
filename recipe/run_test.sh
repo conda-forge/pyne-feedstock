@@ -12,4 +12,4 @@ test -f ${PREFIX}/lib/libpyne*
 test -f ${PREFIX}/include/pyne/pyne.h
 test -f ${PREFIX}/lib/python*/site-packages/pyne/nuc_data.h5
 ${PYTHON} -c "from pyne.pyne_config import pyne_conf; print(pyne_conf.NUC_DATA_PATH)"
-nosetests --nocapture
+./ci-run-test.sh python3
