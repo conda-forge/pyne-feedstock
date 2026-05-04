@@ -14,6 +14,7 @@ source:
   patches:
     - drop-distutils-from-setup-py.patch
     - use-shutil-rmtree-in-utils.patch
+    - use-policy_max-in-cmake_minimum_required.patch
 
 build:
   number: ${{ build_number }}

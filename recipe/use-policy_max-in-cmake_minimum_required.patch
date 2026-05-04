@@ -1,0 +1,23 @@
+From 3f5503b5b6df7941cc08799166d081941e5aef26 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Tue, 17 Feb 2026 19:42:36 -0700
+Subject: [PATCH] fix: Use policy_max in cmake_minimum_required
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4daf4f5..b6812c02 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ # Defines the CMake commands/policies
+-cmake_minimum_required(VERSION 3.0.0)
++cmake_minimum_required(VERSION 3.0.0...4.2)
+ 
+ if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12.0")
+   cmake_policy(SET CMP0074 NEW)
+-- 
+2.53.0
+
