@@ -15,6 +15,7 @@ source:
     - drop-distutils-from-setup-py.patch
     - use-shutil-rmtree-in-utils.patch
     - use-policy_max-in-cmake_minimum_required.patch
+    - use-python3-cmake-variables.patch
 
 build:
   number: ${{ build_number }}
