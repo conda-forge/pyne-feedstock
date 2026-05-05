@@ -26,6 +26,7 @@ source:
     - python310-collections-ordereddict.patch
     - cython3-test-strict-utf8.patch
     - numpy2-compat.patch
+    - use-scipy-integrate-trapezoid.patch
 
 build:
   number: ${{ build_number }}
