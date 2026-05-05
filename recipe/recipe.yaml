@@ -19,6 +19,7 @@ source:
     - ignore-unknown-arguments-passed-to-setup.patch
     - use-fallow-argument-mismatch-for-fortran.patch
     - update-to-cython3.patch
+    - use-setuptools-for-setup_sub.py.patch
 
 build:
   number: ${{ build_number }}
