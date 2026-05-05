@@ -16,6 +16,7 @@ source:
     - use-shutil-rmtree-in-utils.patch
     - use-policy_max-in-cmake_minimum_required.patch
     - use-python3-cmake-variables.patch
+    - ignore-unknown-arguments-passed-to-setup.patch
 
 build:
   number: ${{ build_number }}

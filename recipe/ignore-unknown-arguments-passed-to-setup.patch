@@ -1,0 +1,39 @@
+From fe4773673e7b679e66bb55634a8a561299f0ddba Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Tue, 17 Feb 2026 23:05:00 -0700
+Subject: [PATCH] fix: Ignore unknown arguments passed by conda/pip to setup.py
+
+When rattler-build (and conda-build) run the build with VERBOSE=1, they
+inject --verbose into the Python setup.py invocation. The custom
+argparse-based setup.py has no --verbose argument, causing it to exit
+with status 2:
+
+  setup.py: error: unrecognized arguments: --verbose
+
+The script already works around one such injected flag (--egg-base "does
+nothing, for compatibility"), but rather than enumerate every flag that
+build tooling may inject, switch from parse_args() to parse_known_args().
+
+parse_known_args() returns a (namespace, extras) tuple and silently
+discards any arguments it does not recognise, which is the correct
+behaviour for a setup.py that only cares about its own defined flags.
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index cfb889bf..a03ab70c 100755
+--- a/setup.py
++++ b/setup.py
+@@ -348,7 +348,7 @@ def parse_args():
+                        dest='spatial_solvers',
+                        help='Do NOT build spatial solvers')
+ 
+-    ns = parser.parse_args(argv)
++    ns, _ = parser.parse_known_args(argv)
+     update_setup_args(ns)
+     update_cmake_args(ns)
+     update_make_args(ns)
+-- 
+2.53.0
+
