@@ -18,6 +18,7 @@ source:
     - use-python3-cmake-variables.patch
     - ignore-unknown-arguments-passed-to-setup.patch
     - use-fallow-argument-mismatch-for-fortran.patch
+    - update-to-cython3.patch
 
 build:
   number: ${{ build_number }}
