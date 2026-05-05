@@ -1,0 +1,34 @@
+From 2fca11e3111b623a8a41a524ccf31aef43b75a2e Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 02:56:46 -0700
+Subject: [PATCH] fix: force meson backend for f2py and migrate build.sh to pip
+ install
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+f2py on Python 3.11 defaults to the distutils backend, which calls
+Compiler.__init__(None, dry_run, force) — a signature incompatible
+with the current setuptools Compiler class
+(TypeError: takes from 1 to 3 positional arguments but 4 were given).
+Explicitly pass --backend meson so f2py uses the meson backend on all
+Python versions; meson is provided as a host dependency in the recipe.
+---
+ pyne/CMakeLists.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/pyne/CMakeLists.txt b/pyne/CMakeLists.txt
+index 27670f9a..f28823d8 100644
+--- a/pyne/CMakeLists.txt
++++ b/pyne/CMakeLists.txt
+@@ -74,6 +74,7 @@ if(BUILD_SPATIAL_SOLVER)
+             ${F2PY_F90FLAGS}
+             --f90flags="-fdefault-real-8"
+             --no-wrap-functions
++            --backend meson
+             -lpyne
+             ${PROJECT_SOURCE_DIR}/src/transport_spatial_methods/3d/main.f90
+     DEPENDS pyne
+-- 
+2.53.0
+
