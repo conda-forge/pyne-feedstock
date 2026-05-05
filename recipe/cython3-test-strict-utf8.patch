@@ -1,0 +1,120 @@
+From 8c99b5a532f596f2b7bd0bbb886506e7ed0e4d13 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 09:46:21 -0700
+Subject: [PATCH] fix: accept UnicodeDecodeError alongside RuntimeError in C++
+ exception tests
+
+Cython 3 strictly UTF-8-decodes the bytes returned by C++
+``std::exception::what()`` before re-raising as a Python exception.
+When the C++ exception message contains bytes that are not valid UTF-8
+(`pyne`'s nucname / rxname / material C++ layer signals errors with
+hashed integer-token byte sequences), Cython 3 now raises
+``UnicodeDecodeError`` instead of ``RuntimeError``.
+
+Update the affected ``assert_raises`` calls in
+``tests/test_nucname.py``, ``tests/test_rxname.py``, and
+``tests/test_material.py`` to accept both exception types via the tuple
+form so the tests pass on both pre- and post-Cython-3 builds.
+---
+ tests/test_material.py |  2 +-
+ tests/test_nucname.py  |  4 ++--
+ tests/test_rxname.py   | 20 ++++++++++----------
+ 3 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/tests/test_material.py b/tests/test_material.py
+index 31115e1..72d74f8 100644
+--- a/tests/test_material.py
++++ b/tests/test_material.py
+@@ -750,7 +750,7 @@ def test_getitem_int():
+ def test_getitem_str():
+     mat = Material(nucvec)
+     assert_equal(mat['U235'], 1.0)
+-    assert_raises(RuntimeError, lambda: mat['word'])
++    assert_raises((RuntimeError, UnicodeDecodeError), lambda: mat['word'])
+ 
+     mat = Material(leu)
+     assert_equal(mat['U235'], 0.04)
+diff --git a/tests/test_nucname.py b/tests/test_nucname.py
+index 03edd05..da06ac0 100644
+--- a/tests/test_nucname.py
++++ b/tests/test_nucname.py
+@@ -123,7 +123,7 @@ def test_id():
+     assert_equal(nucname.id("94-Pu-239"), nucname.id("Pu-239"))
+     assert_equal(nucname.id("95-Am-242"), nucname.id("Am-242"))
+ 
+-    assert_raises(RuntimeError, nucname.id, '0-H-1')
++    assert_raises((RuntimeError, UnicodeDecodeError), nucname.id, '0-H-1')
+ 
+ def test_name():
+     assert_equal(nucname.name(942390), "Pu239")
+@@ -302,7 +302,7 @@ def test_mcnp_to_id():
+         yield check_cases, nucname.mcnp_to_id, val, id
+ 
+     # tests for invalid inputs
+-    yield assert_raises, RuntimeError, nucname.mcnp_to_id, 92
++    yield assert_raises, (RuntimeError, UnicodeDecodeError), nucname.mcnp_to_id, 92
+ 
+ def test_openmc():
+     assert_equal(nucname.openmc(10010),  "H1")
+diff --git a/tests/test_rxname.py b/tests/test_rxname.py
+index 8bfefbe..bede2f6 100644
+--- a/tests/test_rxname.py
++++ b/tests/test_rxname.py
+@@ -66,8 +66,8 @@ def test_name_nucdelta():
+     assert_equal(rxname.name(922350, 912350), "p")
+ 
+ def test_name_not():
+-    assert_raises(RuntimeError, rxname.name, "Waka waka")
+-    assert_raises(RuntimeError, rxname.name, 0)
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.name, "Waka waka")
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.name, 0)
+ 
+ def test_id_names():
+     assert_equal(rxname.id("a"), _hash("a"))
+@@ -103,8 +103,8 @@ def test_id_nucdelta():
+     assert_equal(rxname.id(922350, 912350), _hash("p"))
+ 
+ def test_id_not():
+-    assert_raises(RuntimeError, rxname.id, "Waka waka")
+-    assert_raises(RuntimeError, rxname.id, 0)
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.id, "Waka waka")
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.id, 0)
+ 
+ def test_mt_names():
+     assert_equal(rxname.mt("a"), 107)
+@@ -140,8 +140,8 @@ def test_mt_nucdelta():
+     assert_equal(rxname.mt(922350, 912350), 103)
+ 
+ def test_mt_not():
+-    assert_raises(RuntimeError, rxname.mt, "Waka waka")
+-    assert_raises(RuntimeError, rxname.mt, 0)
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.mt, "Waka waka")
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.mt, 0)
+ 
+ def test_child():
+     assert_equal(rxname.child("U235", "absorption"), 922360000)
+@@ -199,8 +199,8 @@ def test_label_nucdelta():
+     assert_equal(rxname.label(922350, 912350), plabel)
+ 
+ def test_label_not():
+-    assert_raises(RuntimeError, rxname.label, "Waka waka")
+-    assert_raises(RuntimeError, rxname.label, 0)
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.label, "Waka waka")
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.label, 0)
+ 
+ 
+ adoc = "(z,a) Production of alpha"
+@@ -242,8 +242,8 @@ def test_doc_nucdelta():
+     assert_equal(rxname.doc(922350, 912350), pdoc)
+ 
+ def test_doc_not():
+-    assert_raises(RuntimeError, rxname.doc, "Waka waka")
+-    assert_raises(RuntimeError, rxname.doc, 0)
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.doc, "Waka waka")
++    assert_raises((RuntimeError, UnicodeDecodeError), rxname.doc, 0)
+ 
+ def test_unique_ids():
+     assert_equal(len(rxname.id_name), len(rxname.name_id))
+-- 
+2.53.0
+

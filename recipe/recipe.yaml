@@ -24,6 +24,7 @@ source:
     - fix-add-missing-commas-for-fortran-runtime.patch
     - use-importlib-in-tests.patch
     - python310-collections-ordereddict.patch
+    - cython3-test-strict-utf8.patch
 
 build:
   number: ${{ build_number }}
