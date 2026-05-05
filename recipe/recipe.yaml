@@ -13,6 +13,7 @@ source:
   sha256: 80143d5e232b89ffd89121363c0e1e615acc28c26f5d7682521eb9baf98311c4
   patches:
     - drop-distutils-from-setup-py.patch
+    - use-shutil-rmtree-in-utils.patch
 
 build:
   number: ${{ build_number }}
