@@ -1,0 +1,78 @@
+From 4e44d482d94d2c1faf965714b88846df09b4f64c Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 09:46:21 -0700
+Subject: [PATCH] fix: NumPy 2 compatibility in openmc_utils and tests
+
+NumPy 2.0 removed several long-deprecated APIs that pyne still relies on.
+
+- ``pyne/openmc_utils.py``: ``np.reshape(arr, newshape=...)`` no longer
+  accepts the ``newshape`` keyword and must be passed positionally.
+- ``tests/test_openmc_utils.py``: NumPy 2 raises ``ValueError`` when an
+  inhomogeneous (ragged) sequence is passed to ``np.array()``.
+  Build the per-axis 1-D arrays via ``np.empty(dtype=object)`` and
+  index assignment instead.
+- ``tests/transmute/test_chainsolve.py``: ``numpy.testing.dec`` was
+  removed in NumPy 1.24.
+  The import was unused, so just remove it.
+---
+ pyne/openmc_utils.py               | 4 ++--
+ tests/test_openmc_utils.py         | 7 ++++---
+ tests/transmute/test_chainsolve.py | 2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/pyne/openmc_utils.py b/pyne/openmc_utils.py
+index 74bdee9..3eeb5af 100644
+--- a/pyne/openmc_utils.py
++++ b/pyne/openmc_utils.py
+@@ -375,7 +375,7 @@ def result_changes_order(result, dims):
+     num_e_groups = result.size // (x_dim * y_dim * z_dim)
+     # the original result, energy changes the fastest, x next, y next, then z
+     # reshape result to 4 dimension (z, y, x, e, with e changes fastest) array
+-    result_ = np.reshape(result, newshape=(z_dim, y_dim, x_dim, num_e_groups))
++    result_ = np.reshape(result, (z_dim, y_dim, x_dim, num_e_groups))
+ 
+     # the target sequence, energy changes fastest, z next, y next, then x
+     # move the axis from [0, 1, 2, 3] (z, y, x, e) to
+@@ -384,7 +384,7 @@ def result_changes_order(result, dims):
+ 
+     # reshape the 4 dimension (x, y, z, e, with e changes fastest) array to
+     #             2 dimension (x_dim*y_dim*z_dim, num_e_groups) array
+-    result_ = np.reshape(result_, newshape=(x_dim * y_dim * z_dim, num_e_groups))
++    result_ = np.reshape(result_, (x_dim * y_dim * z_dim, num_e_groups))
+ 
+     return result_
+ 
+diff --git a/tests/test_openmc_utils.py b/tests/test_openmc_utils.py
+index be3322a..9b91125 100644
+--- a/tests/test_openmc_utils.py
++++ b/tests/test_openmc_utils.py
+@@ -110,9 +110,10 @@ def test_calc_structured_coords():
+     lower_left = np.array([0.0, 0.0, 0.0])
+     upper_right = np.array([1.0, 2.0, 3.0])
+     dimension = np.array([2, 4, 5])
+-    exp_structured_coords = np.array([[0.0, 0.5, 1.0],
+-                                      [0.0, 0.5, 1.0, 1.5, 2.0],
+-                                      [0.0, 0.6, 1.2, 1.8, 2.4, 3.0]])
++    exp_structured_coords = np.empty(3, dtype=object)
++    exp_structured_coords[0] = np.array([0.0, 0.5, 1.0])
++    exp_structured_coords[1] = np.array([0.0, 0.5, 1.0, 1.5, 2.0])
++    exp_structured_coords[2] = np.array([0.0, 0.6, 1.2, 1.8, 2.4, 3.0])
+     structured_coords = openmc_utils.calc_structured_coords(lower_left,
+             upper_right, dimension)
+     assert_equal(len(structured_coords), len(exp_structured_coords))
+diff --git a/tests/transmute/test_chainsolve.py b/tests/transmute/test_chainsolve.py
+index ffbff6f..cb3b90f 100644
+--- a/tests/transmute/test_chainsolve.py
++++ b/tests/transmute/test_chainsolve.py
+@@ -7,7 +7,7 @@ from nose.tools import assert_equal, assert_not_equal, assert_raises, raises, \
+     assert_almost_equal, assert_true, assert_false, assert_is, with_setup, \
+     assert_less
+ 
+-from numpy.testing import dec, assert_array_equal
++from numpy.testing import assert_array_equal
+ 
+ import numpy  as np
+ import tables as tb
+-- 
+2.53.0
+

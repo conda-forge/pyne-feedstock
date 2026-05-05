@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Sun, 03 May 2026 12:00:00 -0700
+Subject: [PATCH] fix: use scipy.integrate.trapezoid in place of removed
+ scipy.integrate.trapz
+
+The legacy ``scipy.integrate.trapz`` alias was deprecated in SciPy 1.12 and
+removed entirely in SciPy 1.14. Replace it with the spelling that has been
+the recommended one since SciPy 1.6.
+---
+ pyne/xs/channels.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyne/xs/channels.py b/pyne/xs/channels.py
+--- a/pyne/xs/channels.py
++++ b/pyne/xs/channels.py
+@@ -448,7 +448,7 @@ def chi(nuc, temp=300.0, group_struct=None, phi_g=None, xs_cache=None,
+         for g in range(G):
+             E_space = np.logspace(np.log10(E_g[g]), np.log10(E_g[g+1]), eres)
+             dnumer = models.chi(E_space)
+-            numer = scipy.integrate.trapz(dnumer, E_space)
++            numer = scipy.integrate.trapezoid(dnumer, E_space)
+             denom = (E_g[g+1] - E_g[g])
+             chi_g[g] = (numer / denom)
+         # renormalize chi

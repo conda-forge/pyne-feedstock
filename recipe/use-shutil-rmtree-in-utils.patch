@@ -1,0 +1,63 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Sun, 04 May 2026 00:00:00 -0700
+Subject: [PATCH] fix: replace distutils.dir_util with stdlib shutil/os
+
+The ``distutils`` standard-library module was removed in Python 3.12 (PEP
+632). ``pyne/utils.py`` imported ``distutils.dir_util.remove_tree`` at
+top level, so ``import pyne`` (and any transitive import via
+``pyne.material`` / ``pyne.mesh``) failed with ``ModuleNotFoundError`` on
+Python 3.12+.
+
+Replace ``remove_tree`` with ``shutil.rmtree`` (equivalent for recursive
+directory removal — the distutils-only ``verbose=False`` keyword argument
+is dropped) and ``mkpath`` with ``os.makedirs(..., exist_ok=True)``.
+---
+ pyne/dbgen/nuc_data_make.py | 4 ++--
+ pyne/utils.py               | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/pyne/dbgen/nuc_data_make.py b/pyne/dbgen/nuc_data_make.py
+--- a/pyne/dbgen/nuc_data_make.py
++++ b/pyne/dbgen/nuc_data_make.py
+@@ -8,7 +8,7 @@ try:
+ except ImportError:
+     import urllib2
+ import shutil
+-from distutils.dir_util import mkpath, remove_tree
++from shutil import rmtree
+
+ from pyne.api import nuc_data
+ from pyne.utils import message
+@@ -132,8 +132,8 @@ def main(args=None):
+     # Make the build dir
+     if args.clean == 2 and os.path.exists(args.build_dir):
+         print("Removing build_dir from {0}".format(args.build_dir))
+-        remove_tree(args.build_dir)
+-    mkpath(args.build_dir)
++        rmtree(args.build_dir)
++    os.makedirs(args.build_dir, exist_ok=True)
+
+     # Determine what to make
+     if args.make == 'none':
+diff --git a/pyne/utils.py b/pyne/utils.py
+--- a/pyne/utils.py
++++ b/pyne/utils.py
+@@ -3,7 +3,7 @@ import os
+
+ from warnings import warn
+
+-from distutils.dir_util import remove_tree
++from shutil import rmtree
+ import filecmp
+ from io import open
+
+@@ -196,7 +196,7 @@ def remove(path):
+     if os.path.isfile(path):
+         os.remove(path)
+     elif os.path.isdir(path):
+-        remove_tree(path, verbose=False)
++        rmtree(path)
+     else:
+         pass
+

@@ -1,0 +1,288 @@
+From bc30b5ed121cd80fdd0dca0b7a907194c530e343 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Tue, 17 Feb 2026 19:50:30 -0700
+Subject: [PATCH] fix: migrate to find_package(Python3) and use the keyword
+ target_link_libraries signature
+
+Two related changes that must land together to build under CMake 4.
+
+1. Replace the legacy ``find_package(PythonInterp)`` and
+   ``find_package(PythonLibs)`` modules (deprecated in CMake 3.12,
+   removed in CMake 3.27) with ``find_package(Python3 ...)``, and
+   replace the legacy ``python_add_module()`` with
+   ``Python3_add_library(... MODULE ...)``.
+   A small block of compat aliases (``PYTHON_EXECUTABLE``,
+   ``PYTHON_LIBRARIES``, ...) is added so the existing cmake/*.cmake
+   helpers and downstream code continue to work unchanged.
+
+2. ``Python3_add_library`` internally calls ``target_link_libraries``
+   with the keyword signature (``PRIVATE``/``PUBLIC``/``INTERFACE``)
+   via FindPython/Support.cmake.
+   CMake 4 strictly enforces that all ``target_link_libraries`` calls on
+   a given target use a single signature style.
+   Every remaining plain-form call against a Cython module target therefore
+   needs ``PRIVATE``.
+   The chained plain-form calls against the ``pyne`` library target in
+   src/CMakeLists.txt are consolidated into a single
+   ``target_link_libraries(pyne PRIVATE ...)`` call to forestall the same
+   future risk for the library target itself.
+
+These two changes are presented as a single patch because the
+``PRIVATE``-keyword changes are not meaningful (and not even syntactically
+necessary) without the migration to ``Python3_add_library`` that introduces
+the keyword-form constraint.
+---
+ CMakeLists.txt         | 26 ++++++++++++++------------
+ cmake/FindCython.cmake |  6 +++---
+ cmake/FindNumpy.cmake  | 12 ++++++------
+ cmake/FindPyne.cmake   |  8 ++++----
+ cmake/UseCython.cmake  | 12 ++++++------
+ pyne/CMakeLists.txt    |  6 +++---
+ pyne/xs/CMakeLists.txt |  2 +-
+ src/CMakeLists.txt     | 17 +++++++++--------
+ 8 files changed, 46 insertions(+), 43 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b4daf4f..12774cc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -135,20 +135,22 @@ if(WITH_DAGMC)
+ endif()
+ 
+ # Find Python
+-find_package(PythonInterp REQUIRED)
+-find_package(PythonLibs REQUIRED)
+-if(PYTHON_VERSION_MAJOR EQUAL 2)
+-  set(SITE_PACKAGES_CODE
+-      "import site; print site.getusersitepackages().replace(site.USER_BASE, '${CMAKE_INSTALL_PREFIX}', 1)")
+-else(PYTHON_VERSION_MAJOR EQUAL 2)
+-  set(SITE_PACKAGES_CODE
+-      "import site; print(site.getsitepackages(['${CMAKE_INSTALL_PREFIX}'])[0])")
+-endif(PYTHON_VERSION_MAJOR EQUAL 2)
+-execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "${SITE_PACKAGES_CODE}"
++find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
++# Compatibility aliases used by cmake/*.cmake helpers and downstream code
++set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
++set(PYTHON_LIBRARIES ${Python3_LIBRARIES})
++set(PYTHON_INCLUDE_DIRS ${Python3_INCLUDE_DIRS})
++set(PYTHON_VERSION_MAJOR ${Python3_VERSION_MAJOR})
++set(PYTHON_VERSION_MINOR ${Python3_VERSION_MINOR})
++set(PYTHON_VERSION_PATCH ${Python3_VERSION_PATCH})
++set(PYTHONLIBS_VERSION_STRING ${Python3_VERSION})
++set(SITE_PACKAGES_CODE
++    "import site; print(site.getsitepackages(['${CMAKE_INSTALL_PREFIX}'])[0])")
++execute_process(COMMAND "${Python3_EXECUTABLE}" -c "${SITE_PACKAGES_CODE}"
+                 OUTPUT_VARIABLE PYTHON_SITE_PACKAGES
+                 OUTPUT_STRIP_TRAILING_WHITESPACE)
+-set(LIBS ${LIBS} ${PYTHON_LIBRARIES})
+-message("-- PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
++set(LIBS ${LIBS} ${Python3_LIBRARIES})
++message("-- PYTHON_EXECUTABLE: ${Python3_EXECUTABLE}")
+ message("-- PYTHON_SITE_PACKAGES: ${PYTHON_SITE_PACKAGES}")
+ 
+ 
+diff --git a/cmake/FindCython.cmake b/cmake/FindCython.cmake
+index a09df03..35a8919 100644
+--- a/cmake/FindCython.cmake
++++ b/cmake/FindCython.cmake
+@@ -28,9 +28,9 @@
+ 
+ # Use the Cython executable that lives next to the Python executable
+ # if it is a local installation.
+-find_package( PythonInterp )
+-if( PYTHONINTERP_FOUND )
+-  get_filename_component( _python_path ${PYTHON_EXECUTABLE} PATH )
++find_package( Python3 COMPONENTS Interpreter )
++if( Python3_Interpreter_FOUND )
++  get_filename_component( _python_path ${Python3_EXECUTABLE} PATH )
+   find_program(CYTHON_EXECUTABLE
+     NAMES cython cython.bat cython3 cython-2.7 cython-3.3 cython-3.4 cython-3.5 cython-3.6 cython-3.7
+     HINTS ENV PATH ${_python_path}
+diff --git a/cmake/FindNumpy.cmake b/cmake/FindNumpy.cmake
+index 136fce2..be4c988 100644
+--- a/cmake/FindNumpy.cmake
++++ b/cmake/FindNumpy.cmake
+@@ -25,10 +25,10 @@
+ #  License text for the above reference.)
+ 
+ # set NUMPY_INCLUDE_DIR
+-find_package ( PythonInterp )
++find_package ( Python3 COMPONENTS Interpreter )
+ 
+-if ( PYTHONINTERP_FOUND )
+-  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.get_include())"
++if ( Python3_Interpreter_FOUND )
++  execute_process ( COMMAND ${Python3_EXECUTABLE} -c "import numpy; print(numpy.get_include())"
+                     OUTPUT_VARIABLE NUMPY_INCLUDE_DIR
+                     ERROR_QUIET
+                     OUTPUT_STRIP_TRAILING_WHITESPACE )
+@@ -38,8 +38,8 @@ endif ()
+ set ( NUMPY_INCLUDE_DIRS ${NUMPY_INCLUDE_DIR} )
+ 
+ # version
+-if ( PYTHONINTERP_FOUND )
+-  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.__version__)"
++if ( Python3_Interpreter_FOUND )
++  execute_process ( COMMAND ${Python3_EXECUTABLE} -c "import numpy; print(numpy.__version__)"
+                     OUTPUT_VARIABLE NUMPY_VERSION_STRING
+                     OUTPUT_STRIP_TRAILING_WHITESPACE )
+ 
+@@ -49,7 +49,7 @@ if ( PYTHONINTERP_FOUND )
+     string ( REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+).*" "\\1" NUMPY_PATCH_VERSION ${NUMPY_VERSION_STRING} )
+   endif ()
+ 
+-endif ()
++endif () # Python3_Interpreter_FOUND
+ 
+ # check version
+ set ( _NUMPY_VERSION_MATCH TRUE )
+diff --git a/cmake/FindPyne.cmake b/cmake/FindPyne.cmake
+index 8c825d8..5c79af0 100644
+--- a/cmake/FindPyne.cmake
++++ b/cmake/FindPyne.cmake
+@@ -19,17 +19,17 @@
+ 
+ # Use the Python interpreter to find the libs.
+ if(Pyne_FIND_REQUIRED)
+-    find_package(PythonInterp REQUIRED)
++    find_package(Python3 REQUIRED COMPONENTS Interpreter)
+ else()
+-    find_package(PythonInterp)
++    find_package(Python3 COMPONENTS Interpreter)
+ endif()
+ 
+-if(NOT PYTHONINTERP_FOUND)
++if(NOT Python3_Interpreter_FOUND)
+     set(PYNE_LIBS_FOUND FALSE)
+     return()
+ endif()
+ 
+-execute_process(COMMAND "${PYTHON_EXECUTABLE}" "-c"
++execute_process(COMMAND "${Python3_EXECUTABLE}" "-c"
+     "from pyne import pyne_config as pc; print(pc.prefix); print(pc.lib); print(pc.includes)"
+     RESULT_VARIABLE _PYNE_SUCCESS
+     OUTPUT_VARIABLE _PYNE_VALUES
+diff --git a/cmake/UseCython.cmake b/cmake/UseCython.cmake
+index 46ec804..8633500 100644
+--- a/cmake/UseCython.cmake
++++ b/cmake/UseCython.cmake
+@@ -72,7 +72,7 @@ set( CYTHON_FLAGS "" CACHE STRING
+ mark_as_advanced( CYTHON_ANNOTATE CYTHON_NO_DOCSTRINGS CYTHON_FLAGS )
+ 
+ find_package( Cython REQUIRED )
+-find_package( PythonLibs REQUIRED )
++find_package( Python3 REQUIRED COMPONENTS Development )
+ 
+ set( CYTHON_CXX_EXTENSION "cxx" )
+ set( CYTHON_C_EXTENSION "c" )
+@@ -209,9 +209,9 @@ function( compile_pyx _name generated_file )
+       set( cython_debug_arg "--gdb" )
+   endif()
+ 
+-  if( "${PYTHONLIBS_VERSION_STRING}" MATCHES "^2." )
++  if( "${Python3_VERSION}" MATCHES "^2." )
+     set( version_arg "-2" )
+-  elseif( "${PYTHONLIBS_VERSION_STRING}" MATCHES "^3." )
++  elseif( "${Python3_VERSION}" MATCHES "^3." )
+     set( version_arg "-3" )
+   else()
+     set( version_arg )
+@@ -270,11 +270,11 @@ function( cython_add_module _name )
+   endforeach()
+   compile_pyx( ${_name} generated_file ${pyx_module_sources} )
+   include_directories( ${PYTHON_INCLUDE_DIRS} )
+-  python_add_module( ${_name} ${generated_file} ${other_module_sources} )
++  Python3_add_library( ${_name} MODULE ${generated_file} ${other_module_sources} )
+   if( APPLE )
+     set_target_properties( ${_name} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup" )
+   else()
+-    target_link_libraries( ${_name} ${PYTHON_LIBRARIES} )
++    target_link_libraries( ${_name} PRIVATE ${PYTHON_LIBRARIES} )
+   endif()
+ endfunction()
+ 
+@@ -312,5 +312,5 @@ function( cython_add_standalone_executable _name )
+   set( CYTHON_FLAGS ${CYTHON_FLAGS} --embed )
+   compile_pyx( "${main_module_we}_static" generated_file ${main_module} )
+   add_executable( ${_name} ${generated_file} ${pyx_module_sources} ${other_module_sources} )
+-  target_link_libraries( ${_name} ${PYTHON_LIBRARIES} ${pyx_module_libs} )
++  target_link_libraries( ${_name} PRIVATE ${PYTHON_LIBRARIES} ${pyx_module_libs} )
+ endfunction()
+diff --git a/pyne/CMakeLists.txt b/pyne/CMakeLists.txt
+index a278890..27670f9 100644
+--- a/pyne/CMakeLists.txt
++++ b/pyne/CMakeLists.txt
+@@ -37,7 +37,7 @@ foreach(cymod ${PYNE_CYTHON_MODULES})
+   set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/${cymod}.pyx"
+                               PROPERTIES CYTHON_IS_CXX TRUE)
+   cython_add_module(${cymod} ${cymod}.pyx)
+-  target_link_libraries(${cymod} pyne)
++  target_link_libraries(${cymod} PRIVATE pyne)
+   install(TARGETS ${cymod} LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne")
+ endforeach()
+ 
+@@ -45,7 +45,7 @@ endforeach()
+ # Cram is actually a C, not C++ file
+ #
+ cython_add_module(cram cram.pyx)
+-target_link_libraries(cram pyne)
++target_link_libraries(cram PRIVATE pyne)
+ install(TARGETS cram LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne")
+ 
+ #
+@@ -55,7 +55,7 @@ if(DAGMC_FOUND)
+   set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/dagmc.pyx"
+                               PROPERTIES CYTHON_IS_CXX TRUE)
+   cython_add_module(_dagmc dagmc.pyx "${PROJECT_SOURCE_DIR}/src/dagmc_bridge.cpp")
+-  target_link_libraries(_dagmc dagmc MOAB pyne)
++  target_link_libraries(_dagmc PRIVATE dagmc MOAB pyne)
+   set_target_properties(_dagmc PROPERTIES OUTPUT_NAME dagmc)
+   install(TARGETS _dagmc LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne")
+ endif(DAGMC_FOUND)
+diff --git a/pyne/xs/CMakeLists.txt b/pyne/xs/CMakeLists.txt
+index 230f6af..885af04 100644
+--- a/pyne/xs/CMakeLists.txt
++++ b/pyne/xs/CMakeLists.txt
+@@ -7,5 +7,5 @@ message("-- Include paths for ${CMAKE_CURRENT_SOURCE_DIR}: ${inc_dirs}")
+ set_source_files_properties("${PROJECT_SOURCE_DIR}/pyne/xs/models.pyx"
+                             PROPERTIES CYTHON_IS_CXX TRUE)
+ cython_add_module(models models.pyx)
+-target_link_libraries(models pyne)
++target_link_libraries(models PRIVATE pyne)
+ install(TARGETS models LIBRARY DESTINATION "${PYTHON_SITE_PACKAGES}/pyne/xs")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2c151e9..93b1fe9 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -87,19 +87,20 @@ fast_compile(cram.c
+ # compile and link library
+ add_library(pyne ${PYNE_SRCS})
+ if("${LIBS_HDF5}" STREQUAL "")
+-  target_link_libraries(pyne hdf5)
++  set(_PYNE_LINK_LIBS hdf5)
+ else()
+-  target_link_libraries(pyne ${LIBS_HDF5})
++  set(_PYNE_LINK_LIBS ${LIBS_HDF5})
+ endif()
+ IF(BUILD_SPATIAL_SOLVER)
+-    target_link_libraries(pyne ${LIBS_HDF5} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+-ENDIF(BUILD_SPATIAL_SOLVER)
++    list(APPEND _PYNE_LINK_LIBS ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
++ENDIF()
+ if(MOAB_FOUND)
+-    target_link_libraries(pyne MOAB)
+-endif(MOAB_FOUND)
++    list(APPEND _PYNE_LINK_LIBS MOAB)
++endif()
+ if(DAGMC_FOUND)
+-    target_link_libraries(pyne dagmc MOAB)
+-endif(DAGMC_FOUND)
++    list(APPEND _PYNE_LINK_LIBS dagmc MOAB)
++endif()
++target_link_libraries(pyne PRIVATE ${_PYNE_LINK_LIBS})
+ 
+ add_executable(alphad ${PROJECT_SOURCE_DIR}/src/ensdf_processing/ALPHAD/alphad.f
+                       ${PROJECT_SOURCE_DIR}/src/ensdf_processing/nsdflib95.f)
+-- 
+2.53.0
+
