@@ -22,6 +22,7 @@ source:
     - use-setuptools-for-setup_sub.py.patch
     - ensure-meson-backend-for-f2py.patch
     - fix-add-missing-commas-for-fortran-runtime.patch
+    - use-importlib-in-tests.patch
 
 build:
   number: ${{ build_number }}
