@@ -1,0 +1,56 @@
+From 10d6f8009317e2f9d9048aac01e78197ac6cd10f Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 09:18:48 -0700
+Subject: [PATCH] fix: add missing commas between Fortran FORMAT descriptors in
+ version.f90
+
+gfortran 14+ enforces the Fortran standard requiring commas between
+format descriptors. The non-standard comma-free syntax accepted by
+older gfortran now raises a runtime error:
+
+  Fortran runtime error: Missing comma between descriptors
+  (1X "Ran on " I2 "-" I2 "-" I4)
+
+Add the required commas to both the 2D and 3D version.f90 files. The
+missing commas caused the spatial solver tests to crash the nosetests
+process entirely (exit status 2) rather than a clean test failure.
+Compiler flags cannot fix this since FORMAT strings are parsed at
+runtime by libgfortran, not at compile time.
+---
+ src/transport_spatial_methods/2d/src/version.f90 | 4 ++--
+ src/transport_spatial_methods/3d/version.f90     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/transport_spatial_methods/2d/src/version.f90 b/src/transport_spatial_methods/2d/src/version.f90
+index 0add7b74..d789744e 100755
+--- a/src/transport_spatial_methods/2d/src/version.f90
++++ b/src/transport_spatial_methods/2d/src/version.f90
+@@ -14,8 +14,8 @@ WRITE (8,*) "CODE: Arbitrarily High Order with or without ITM"
+ WRITE (8,*) "VERSION: Modified versions of codes originally by Y. Azmy, et al."
+ WRITE (8,*) "AUTHOR: Robert Joseph Zerr modified by Sebastian Schunert"
+ CALL DATE_AND_TIME (Real_clock(1), Real_clock(2), Real_clock(3), datetime)
+-WRITE (8, '(1X "Ran on " I2 "-" I2 "-" I4)', ADVANCE="NO") datetime(2), datetime(3), datetime(1)
+-WRITE (8, '(" at time " I2 ":" I2 ":" I2)') datetime(5), datetime(6), datetime(7)
++WRITE (8, '(1X, "Ran on ", I2, "-", I2, "-", I4)', ADVANCE="NO") datetime(2), datetime(3), datetime(1)
++WRITE (8, '(" at time ", I2, ":", I2, ":", I2)') datetime(5), datetime(6), datetime(7)
+ WRITE (8,*)
+ WRITE (8,*) "-----------------------------------------------------------------------------"
+ 
+diff --git a/src/transport_spatial_methods/3d/version.f90 b/src/transport_spatial_methods/3d/version.f90
+index 228915e4..7c283ad8 100644
+--- a/src/transport_spatial_methods/3d/version.f90
++++ b/src/transport_spatial_methods/3d/version.f90
+@@ -14,8 +14,8 @@ WRITE (8,*) "CODE: Arbitrarily High Order Transport 3D with or without ITM"
+ WRITE (8,*) "VERSION: Modified versions of codes originally by Y. Azmy, et al."
+ WRITE (8,*) "AUTHOR: Robert Joseph Zerr"
+ CALL DATE_AND_TIME (Real_clock(1), Real_clock(2), Real_clock(3), datetime)
+-WRITE (8, '(1X "Ran on " I2 "-" I2 "-" I4)', ADVANCE="NO") datetime(2), datetime(3), datetime(1)
+-WRITE (8, '(" at time " I2 ":" I2 ":" I2)') datetime(5), datetime(6), datetime(7)
++WRITE (8, '(1X, "Ran on ", I2, "-", I2, "-", I4)', ADVANCE="NO") datetime(2), datetime(3), datetime(1)
++WRITE (8, '(" at time ", I2, ":", I2, ":", I2)') datetime(5), datetime(6), datetime(7)
+ WRITE (8,*)
+ WRITE (8,*) "-----------------------------------------------------------------------------"
+ 
+-- 
+2.53.0
+
