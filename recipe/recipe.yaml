@@ -23,6 +23,7 @@ source:
     - ensure-meson-backend-for-f2py.patch
     - fix-add-missing-commas-for-fortran-runtime.patch
     - use-importlib-in-tests.patch
+    - python310-collections-ordereddict.patch
 
 build:
   number: ${{ build_number }}

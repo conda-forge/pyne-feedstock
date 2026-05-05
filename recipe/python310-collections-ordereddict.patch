@@ -1,0 +1,35 @@
+From 7df26e00960a593ac170e3930b92e917f1f7a629 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 18 Feb 2026 09:46:21 -0700
+Subject: [PATCH] FIX: Add patch to import OrderedDict from collections, not
+ collections.abc
+
+* Python 3.10 enforced that OrderedDict lives in the collections
+module, not collections.abc.
+The pyne/endf.pyx import was checking the wrong module first and
+importing OrderedDict from collections.abc, which raises
+ImportError on Python 3.10+.
+---
+ pyne/endf.pyx | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/pyne/endf.pyx b/pyne/endf.pyx
+index a0ee1368..1bd7e342 100644
+--- a/pyne/endf.pyx
++++ b/pyne/endf.pyx
+@@ -15,10 +15,8 @@ from __future__ import print_function, division, unicode_literals
+ 
+ import re
+ import os
+-try:
+-    from collections.abc import OrderedDict, Iterable
+-except ImportError:
+-    from collections import OrderedDict, Iterable
++from collections import OrderedDict
++from collections.abc import Iterable
+ from warnings import warn
+ from pyne.utils import QA_warn
+ 
+-- 
+2.53.0
+
