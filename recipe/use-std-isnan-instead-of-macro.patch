@@ -1,0 +1,194 @@
+From 5c18b8aaa2aa3bcf9735f84fc4a30725fe4fcd44 Mon Sep 17 00:00:00 2001
+From: Matthew Feickert <matthew.feickert@cern.ch>
+Date: Wed, 6 May 2026 07:17:11 -0600
+Subject: [PATCH] fix: replace 'isnan' macro with std::isnan calls
+
+The '#define isnan(x) std::isnan(x)' macro in src/utils.h is a
+function-like macro whose name is 'isnan'. When the C++ standard
+library writes 'std::isnan(__x.imag())' from inside namespace std
+(e.g. libc++ 19's <complex>), the preprocessor sees 'isnan(' as a
+macro invocation and expands it, producing 'std::std::isnan(...)',
+which fails to parse with 'no member named std in namespace std'.
+
+The macro was a portability shim for getting std::isnan into the
+unqualified namespace; pyne now requires C++11 unconditionally, so
+'std::isnan' is always available. Replace each call site with the
+properly qualified call and drop the macro definitions, including
+the legacy non-GCC and Windows fallbacks.
+
+Reproduced on conda-forge osx-64 with libcxx-headers 19.1.7
+when compiling Cython 3-generated files that include <complex>.
+---
+ src/data.cpp       | 24 ++++++++++++------------
+ src/enrichment.cpp |  4 ++--
+ src/material.cpp   |  4 ++--
+ src/utils.h        | 12 ------------
+ 4 files changed, 16 insertions(+), 28 deletions(-)
+
+diff --git a/src/data.cpp b/src/data.cpp
+index 293e227..2801639 100644
+--- a/src/data.cpp
++++ b/src/data.cpp
+@@ -1325,7 +1325,7 @@ std::vector<std::pair<double, double> >
+   double xka2 = 0;
+   double xkb = 0;
+   double xl = 0;
+-  if (!isnan(k_conv)) {
++  if (!std::isnan(k_conv)) {
+     xk = data_access<atomic> (z, offsetof(atomic, k_shell_fluor),
+      atomic_data_map)*k_conv;
+     xka = xk / (1.0 + data_access<atomic> (z, offsetof(atomic,
+@@ -1334,12 +1334,12 @@ std::vector<std::pair<double, double> >
+      ka2_to_ka1), atomic_data_map));
+     xka2 = xka - xka1;
+     xkb = xk - xka;
+-    if (!isnan(l_conv)) {
++    if (!std::isnan(l_conv)) {
+         xl = (l_conv + k_conv*data_access<atomic> (z, offsetof(atomic,
+      prob), atomic_data_map))*data_access<atomic> (z, offsetof(atomic,
+      l_shell_fluor), atomic_data_map);
+     }
+-  } else if (!isnan(l_conv)) {
++  } else if (!std::isnan(l_conv)) {
+     xl = l_conv*data_access<atomic> (z, offsetof(atomic,
+      l_shell_fluor), atomic_data_map);
+   }
+@@ -1446,7 +1446,7 @@ int pyne::id_from_level(int nuc, double level, std::string special) {
+        it!=nuc_upper; ++it) {
+     if ((std::abs(level - it->second.level) < minv) &&
+     ((char)it->second.special == special.c_str()[0]) &&
+-    !isnan(it->second.level)) {
++    !std::isnan(it->second.level)) {
+       minv = std::abs(level - it->second.level);
+       ret_id = it->second.nuc_id;
+     }
+@@ -1882,7 +1882,7 @@ template<> void pyne::_load_data<pyne::gamma>() {
+   status = H5Fclose(nuc_data_h5);
+ 
+   for (int i = 0; i < gamma_length; ++i) {
+-    if ((gamma_array[i].parent_nuc != 0) && !isnan(gamma_array[i].energy))
++    if ((gamma_array[i].parent_nuc != 0) && !std::isnan(gamma_array[i].energy))
+       gamma_data[std::make_pair(gamma_array[i].parent_nuc,
+         gamma_array[i].energy)] = gamma_array[i];
+   }
+@@ -2038,7 +2038,7 @@ std::vector<std::pair<double, double> > pyne::gamma_xrays(int parent) {
+         temp = calculate_xray_data(nucname::znum(children[i]),
+           k_list[i]*decay_br[j].first, l_list[i]*decay_br[j].first);
+         for (int k = 0; k < temp.size(); ++k) {
+-          if (!isnan(temp[k].second) && !isnan(temp[k].first)) {
++          if (!std::isnan(temp[k].second) && !std::isnan(temp[k].first)) {
+             int found = 0;
+             for (int l = 0; l < result.size(); ++l) {
+               if (temp[k].first == result[l].first) {
+@@ -2105,7 +2105,7 @@ template<> void pyne::_load_data<pyne::alpha>() {
+   status = H5Fclose(nuc_data_h5);
+ 
+   for (int i = 0; i < alpha_length; ++i) {
+-    if ((alpha_array[i].from_nuc != 0) && !isnan(alpha_array[i].energy))
++    if ((alpha_array[i].from_nuc != 0) && !std::isnan(alpha_array[i].energy))
+       alpha_data[std::make_pair(alpha_array[i].from_nuc, alpha_array[i].energy)]
+         = alpha_array[i];
+   }
+@@ -2183,7 +2183,7 @@ template<> void pyne::_load_data<pyne::beta>() {
+   status = H5Fclose(nuc_data_h5);
+ 
+   for (int i = 0; i < beta_length; ++i) {
+-    if ((beta_array[i].from_nuc != 0) && !isnan(beta_array[i].avg_energy))
++    if ((beta_array[i].from_nuc != 0) && !std::isnan(beta_array[i].avg_energy))
+       beta_data[std::make_pair(beta_array[i].from_nuc, beta_array[i].avg_energy)]
+         = beta_array[i];
+   }
+@@ -2275,7 +2275,7 @@ template<> void pyne::_load_data<pyne::ecbp>() {
+   status = H5Fclose(nuc_data_h5);
+ 
+   for (int i = 0; i < ecbp_length; ++i) {
+-    if ((ecbp_array[i].from_nuc != 0) && !isnan(ecbp_array[i].avg_energy))
++    if ((ecbp_array[i].from_nuc != 0) && !std::isnan(ecbp_array[i].avg_energy))
+       ecbp_data[std::make_pair(ecbp_array[i].from_nuc, ecbp_array[i].avg_energy)]
+         = ecbp_array[i];
+   }
+@@ -2335,7 +2335,7 @@ std::vector<std::pair<double, double> > pyne::ecbp_xrays(int parent) {
+         temp = calculate_xray_data(nucname::znum(children[i]),
+           k_list[i]*decay_br[j].first, l_list[i]*decay_br[j].first);
+         for (int k = 0; k < temp.size(); ++k) {
+-          if (!isnan(temp[k].second) && !isnan(temp[k].first)) {
++          if (!std::isnan(temp[k].second) && !std::isnan(temp[k].first)) {
+             int found = 0;
+             for (int l = 0; l < result.size(); ++l) {
+               if (temp[k].first == result[l].first) {
+@@ -2440,7 +2440,7 @@ std::vector<std::pair<double, double> > pyne::xrays(int parent) {
+         temp = calculate_xray_data(nucname::znum(children[i]),
+           k_list[i]*decay_br[j].first, l_list[i]*decay_br[j].first);
+         for (int k = 0; k < temp.size(); ++k) {
+-          if (!isnan(temp[k].second) && !isnan(temp[k].first)) {
++          if (!std::isnan(temp[k].second) && !std::isnan(temp[k].first)) {
+             int found = 0;
+             for (int l = 0; l < result.size(); ++l) {
+               if (temp[k].first == result[l].first) {
+@@ -2472,7 +2472,7 @@ std::vector<std::pair<double, double> > pyne::xrays(int parent) {
+         temp = calculate_xray_data(nucname::znum(gchildren[i]),
+           gk_list[i]*decay_nrbr[j].first, gl_list[i]*decay_nrbr[j].first);
+         for (int k = 0; k < temp.size(); ++k) {
+-          if (!isnan(temp[k].second) && !isnan(temp[k].first)) {
++          if (!std::isnan(temp[k].second) && !std::isnan(temp[k].first)) {
+             int found = 0;
+             for (int l = 0; l < result.size(); ++l) {
+               if (temp[k].first == result[l].first) {
+diff --git a/src/enrichment.cpp b/src/enrichment.cpp
+index 491691d..2d66770 100644
+--- a/src/enrichment.cpp
++++ b/src/enrichment.cpp
+@@ -426,8 +426,8 @@ pyne_enr::Cascade pyne_enr::multicomponent(pyne_enr::Cascade & orig_casc, \
+ 
+   while (tolerance < fabs(curr_casc.l_t_per_feed - prev_casc.l_t_per_feed) / curr_casc.l_t_per_feed) {
+     // Check that parameters are still well-formed
+-    if (isnan(curr_casc.Mstar) || isnan(curr_casc.l_t_per_feed) || \
+-        isnan(prev_casc.Mstar) || isnan(prev_casc.l_t_per_feed))
++    if (std::isnan(curr_casc.Mstar) || std::isnan(curr_casc.l_t_per_feed) || \
++        std::isnan(prev_casc.Mstar) || std::isnan(prev_casc.l_t_per_feed))
+       throw EnrichmentIterationNaN();
+ 
+     prev_casc = curr_casc;
+diff --git a/src/material.cpp b/src/material.cpp
+index ecb8a8a..dbcf90b 100644
+--- a/src/material.cpp
++++ b/src/material.cpp
+@@ -2000,10 +2000,10 @@ std::vector<std::pair<double, double> > pyne::Material::normalize_radioactivity(
+   std::vector<std::pair<double, double> > normed;
+   double sum = 0.0;
+   for (int i = 0; i < unnormed.size(); ++i) {
+-    if (!isnan(unnormed[i].second)) sum = sum + unnormed[i].second;
++    if (!std::isnan(unnormed[i].second)) sum = sum + unnormed[i].second;
+   }
+   for (int i = 0; i < unnormed.size(); ++i) {
+-    if (!isnan(unnormed[i].second)) {
++    if (!std::isnan(unnormed[i].second)) {
+       normed.push_back(
+           std::make_pair(unnormed[i].first, (unnormed[i].second) / sum));
+     }
+diff --git a/src/utils.h b/src/utils.h
+index 8d5eea3..28769eb 100644
+--- a/src/utils.h
++++ b/src/utils.h
+@@ -25,18 +25,6 @@
+ #include <vector>
+ #include <algorithm>
+ 
+-#if (__GNUC__ >= 4)
+-  #include <cmath>
+-  #define isnan(x) std::isnan(x)
+-#else
+-  #include <math.h>
+-  #define isnan(x) __isnand((double)x)
+-#endif
+-
+-#ifdef _WIN32
+-#define isnan(x) ((x) != (x))
+-#endif
+-
+ #ifndef JSON_IS_AMALGAMATION
+   #define JSON_IS_AMALGAMATION
+ #endif
+-- 
+2.53.0
+

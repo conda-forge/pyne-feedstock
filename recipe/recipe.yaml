@@ -27,6 +27,7 @@ source:
     - cython3-test-strict-utf8.patch
     - numpy2-compat.patch
     - use-scipy-integrate-trapezoid.patch
+    - use-std-isnan-instead-of-macro.patch
 
 build:
   number: ${{ build_number }}
