@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   version: "0.7.5"
-  build_number: 1
+  build_number: 2
 
 package:
   name: pyne
@@ -36,7 +36,9 @@ build:
     # solve impossible.
     - match(python, "<3.11")
     - win
-    - osx
+    # FIXME: Need linux-aarch64 and osx-arm64 builds for openmc
+    # c.f. https://github.com/conda-forge/openmc-feedstock/issues/87
+    - enable_openmc == "openmc" and not x86_64
   prefix_detection:
     ignore_binary_files: true
 
