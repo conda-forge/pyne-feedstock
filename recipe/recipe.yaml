@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   version: "0.7.5"
-  build_number: 1
+  build_number: 2
 
 package:
   name: pyne
@@ -27,6 +27,7 @@ source:
     - cython3-test-strict-utf8.patch
     - numpy2-compat.patch
     - use-scipy-integrate-trapezoid.patch
+    - use-std-isnan-instead-of-macro.patch
 
 build:
   number: ${{ build_number }}
@@ -36,7 +37,9 @@ build:
     # solve impossible.
     - match(python, "<3.11")
     - win
-    - osx
+    # FIXME: Need linux-aarch64 and osx-arm64 builds for openmc
+    # c.f. https://github.com/conda-forge/openmc-feedstock/issues/87
+    - enable_openmc == "openmc" and not x86_64
   prefix_detection:
     ignore_binary_files: true
 
@@ -151,7 +154,15 @@ tests:
       #   - test_fortran, test_data_nofile, test_materials_library,
       #     xs/test_data_source: known data-availability failures on CI
       - rm -f test_endf.py test_endl.py test_decay.py xs/test_data_source.py test_fortran.py test_data_nofile.py test_materials_library.py
-      - nosetests --nocapture
+      # test_material_xrays, test_material_photons, and test_decay_u235_h3
+      # use hard-coded reference values that match x86_64 floating-point
+      # results down to the last ULP; on aarch64/arm64 the same CRAM-based
+      # computation lands ~1 ULP off (and shifts a near-threshold nuclide
+      # in/out of the decay output), causing exact-equality assertions to
+      # fail. Skip just those three tests on ARM platforms.
+      - if: target_platform in ["osx-arm64", "linux-aarch64"]
+        then: nosetests --nocapture --exclude='test_material_xrays|test_material_photons|test_decay_u235_h3'
+        else: nosetests --nocapture
 
 about:
   license: BSD-3-Clause

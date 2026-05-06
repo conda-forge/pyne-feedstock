@@ -14,6 +14,15 @@ Two related changes that must land together to build under CMake 4.
    A small block of compat aliases (``PYTHON_EXECUTABLE``,
    ``PYTHON_LIBRARIES``, ...) is added so the existing cmake/*.cmake
    helpers and downstream code continue to work unchanged.
+   To preserve the inverse direction (build drivers, including the
+   project's own ``setup.py``, that pass ``-DPYTHON_EXECUTABLE=`` on
+   the cmake command line), seed ``Python3_EXECUTABLE`` from
+   ``PYTHON_EXECUTABLE`` before the first ``find_package(Python3)``
+   call. ``find_package(Python3)`` only consults ``Python3_EXECUTABLE``,
+   so without this shim it would search ``PATH`` and may pick a
+   different interpreter than the one the build driver selected, e.g.
+   in a conda-forge cross/native build where the build prefix
+   contains a Python that lacks the host-side ``numpy`` install.
 
 2. ``Python3_add_library`` internally calls ``target_link_libraries``
    with the keyword signature (``PRIVATE``/``PUBLIC``/``INTERFACE``)
@@ -32,7 +41,7 @@ These two changes are presented as a single patch because the
 necessary) without the migration to ``Python3_add_library`` that introduces
 the keyword-form constraint.
 ---
- CMakeLists.txt         | 26 ++++++++++++++------------
+ CMakeLists.txt         | 33 +++++++++++++++++++++++++--------
  cmake/FindCython.cmake |  6 +++---
  cmake/FindNumpy.cmake  | 12 ++++++------
  cmake/FindPyne.cmake   |  8 ++++----
@@ -40,13 +49,13 @@ the keyword-form constraint.
  pyne/CMakeLists.txt    |  6 +++---
  pyne/xs/CMakeLists.txt |  2 +-
  src/CMakeLists.txt     | 17 +++++++++--------
- 8 files changed, 46 insertions(+), 43 deletions(-)
+ 8 files changed, 53 insertions(+), 43 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index b4daf4f..12774cc 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -135,20 +135,22 @@ if(WITH_DAGMC)
+@@ -135,20 +135,29 @@ if(WITH_DAGMC)
  endif()
  
  # Find Python
@@ -60,6 +69,13 @@ index b4daf4f..12774cc 100644
 -      "import site; print(site.getsitepackages(['${CMAKE_INSTALL_PREFIX}'])[0])")
 -endif(PYTHON_VERSION_MAJOR EQUAL 2)
 -execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "${SITE_PACKAGES_CODE}"
++# Honor legacy -DPYTHON_EXECUTABLE= passed by build drivers such as the
++# pyne setup.py; find_package(Python3) consults Python3_EXECUTABLE only,
++# so without this shim it would search PATH and may pick a different
++# interpreter than the one the build driver selected.
++if(NOT Python3_EXECUTABLE AND PYTHON_EXECUTABLE)
++  set(Python3_EXECUTABLE "${PYTHON_EXECUTABLE}")
++endif()
 +find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 +# Compatibility aliases used by cmake/*.cmake helpers and downstream code
 +set(PYTHON_EXECUTABLE ${Python3_EXECUTABLE})
